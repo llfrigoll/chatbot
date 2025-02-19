@@ -42,12 +42,13 @@ const Chatbot = () => {
         setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
         setQuestionIndex(nextIndex);
       }
-      if (data.question.includes("Fantastic, that should be it, it was lovely speaking with you, take care!")) {
-        const timeout = setTimeout(() => {
+      
+      if (data.question && data.question.includes("Fantastic, that should be it, it was lovely speaking with you, take care!")) {
+        setTimeout(() => {
           window.location.reload();
-          clearTimeout(timeout); // Clear the timeout after execution
         }, 7000);
       }
+      
     } else {
       setMessages((prev) => [...prev, { text: "Let me know when you're ready, type 'yes' to proceed.", sender: "bot" }]);
     }
