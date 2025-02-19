@@ -5,9 +5,9 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([
     { text: "Welcome business owner! If you're ready for your AI readiness evaluation type 'yes' to get started. (Please note: refreshing the browser will cause our conversation to be lost)", sender: "bot" }
   ]);
-  const [predefinedOptions, setPredefinedOptions] = useState([""])
   const [userInput, setUserInput] = useState("");
   const [questionIndex, setQuestionIndex] = useState(null);
+  const [email, setEmail] = useState("")
 
   // Function to send data to n8n
   const sendToN8N = async (data) => {
@@ -29,34 +29,30 @@ const Chatbot = () => {
       const data = await sendToN8N({ questionIndex: 1 });
       setQuestionIndex(1);
       setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
-      setPredefinedOptions(data.answers)
-      console.log("workflow triggered")
-    }else { if(questionIndex === null) {
-        setMessages((prev) => [
-          ...prev, { text: "Let me know when you're ready, type 'yes' to proceed.", sender: "bot" }
-        ])
-      }else {
-        setMessages((prev) => [
-          ...prev, {text: prev[prev.length - 1] + "(Hey.. psst.. please pick an answer from the list!)", sender: "bot"}
-        ])
+    } else if (questionIndex !== null) {
+      const nextIndex = questionIndex + 1;
+
+      if(nextIndex === 2){
+        setEmail(userInput)
       }
+      
+      const data = await sendToN8N({ questionIndex: nextIndex, answer: userInput, email: nextIndex === 2 ? userInput : email });
+      
+      if (data.question) {
+        setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
+        setQuestionIndex(nextIndex);
+      }
+      if (data.question.includes("Fantastic, that should be it, it was lovely speaking with you, take care!")) {
+        const timeout = setTimeout(() => {
+          window.location.reload();
+          clearTimeout(timeout); // Clear the timeout after execution
+        }, 7000);
+      }
+    } else {
+      setMessages((prev) => [...prev, { text: "Let me know when you're ready, type 'yes' to proceed.", sender: "bot" }]);
     }
     
     setUserInput("");
-  };
-
-  // Handle predefined answer selection
-  const handleAnswerSelect = async (answer) => {
-    setMessages((prev) => [...prev, { text: answer, sender: "user" }]);
-    
-    const nextIndex = questionIndex + 1;
-    const data = await sendToN8N({ questionIndex: nextIndex, answer });
-    
-    if (data.question) {
-      setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
-      setQuestionIndex(nextIndex);
-      setPredefinedOptions(data.answers)
-    }
   };
 
   return (
@@ -75,19 +71,6 @@ const Chatbot = () => {
               {msg.text}
             </motion.div>
           ))}
-        </div>
-        <div className="mt-4 flex gap-2">
-          {questionIndex !== null && messages[messages.length - 1].sender === "bot" && (
-            predefinedOptions?.map((option, index) => (
-              <button
-                key={index}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                onClick={() => handleAnswerSelect(option)}
-              >
-                {option}
-              </button>
-            ))
-          )}
         </div>
         <div className="mt-4 flex">
           <input
