@@ -22,14 +22,22 @@ const ReviewAnswersPopup = ({ messages, answers, email, updateAnswers }) => {
   // Handle selecting a question
   const handleSelectChange = (event) => {
     const questionIndex = parseInt(event.target.value, 10);
+    
+    // ✅ Ensure we use the updated answers from state
+    const updatedAnswer = answers[questionIndex + 1] || "";
+  
     const selected = botQuestions.find(q => q.index === questionIndex);
     if (selected) {
-      setSelectedQuestion(selected);
-      setEditedAnswer(selected.answer);
-      setOriginalAnswer(selected.answer);
+      setSelectedQuestion({
+        ...selected,
+        answer: updatedAnswer
+      });
+      setEditedAnswer(updatedAnswer);
+      setOriginalAnswer(updatedAnswer);
       setShowSaveButton(false);
     }
   };
+  
 
   // Handle answer change
   const handleAnswerChange = (event) => {
@@ -40,30 +48,40 @@ const ReviewAnswersPopup = ({ messages, answers, email, updateAnswers }) => {
   // Handle saving the answer
   const handleSave = async () => {
     if (!selectedQuestion) return;
-
+  
     const payload = {
       questionIndex: selectedQuestion.index,
       newAnswer: editedAnswer,
       email: email
     };
-
+  
     try {
       const response = await fetch("https://liamalbrecht.app.n8n.cloud/webhook/6ce58298-46c7-4a4c-83a3-22b6375d7af9", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
-
+  
       const data = await response.json();
       if (data.message) {
         alert(data.message);
-
-        // Update the answers object without modifying messages, questionIndex, or email
-        updateAnswers(prevAnswers => ({
-          ...prevAnswers,
-          [selectedQuestion.index]: editedAnswer
-        }));
-
+  
+        // ✅ Update the `answers` state immediately
+        updateAnswers(prevAnswers => {
+          const updatedAnswers = {
+            ...prevAnswers,
+            [selectedQuestion.index]: editedAnswer
+          };
+  
+          // ✅ Ensure `selectedQuestion.answer` also updates
+          setSelectedQuestion(prev => ({
+            ...prev,
+            answer: editedAnswer
+          }));
+  
+          return updatedAnswers;
+        });
+  
         setShowSaveButton(false);
       } else {
         alert("Failed to save answer. Try again.");
@@ -72,7 +90,7 @@ const ReviewAnswersPopup = ({ messages, answers, email, updateAnswers }) => {
       alert("Error saving answer. Error message: " + error);
     }
   };
-
+  
   return (
     <>
       <button 
@@ -126,7 +144,13 @@ const ReviewAnswersPopup = ({ messages, answers, email, updateAnswers }) => {
 
             <button 
               className="bg-gray-500 text-white px-4 py-2 mt-4 rounded-lg w-full"
-              onClick={() => setShowPopup(false)}
+              onClick={() => {
+                setShowPopup(false);
+                setSelectedQuestion(""); // ✅ Clear selected question
+                setEditedAnswer(""); // ✅ Clear answer input
+                setOriginalAnswer(""); // ✅ Reset original answer
+                setShowSaveButton(false); // ✅ Hide save button
+              }}
             >
               Close
             </button>
