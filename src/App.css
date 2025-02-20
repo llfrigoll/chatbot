@@ -7,30 +7,75 @@
     align-items: flex-end;
     justify-content: right;
     padding: 16px;
+    overflow: hidden;
   }
   
-  /* Chat box */
-  .chat-box {
+  /* Chat box container */
+.chat-box {
+    position: relative; /* Needed for absolute positioning of the lines */
     width: 100%;
     height: 100vh;
     max-height: 90%;
     max-width: 50%;
-    margin-top: -8%;
+    margin-top: 3%;
     display: flex;
     flex-direction: column;
-    background: rgba(255, 255, 255, 0.18); /* Transparent white */
-    backdrop-filter: blur(18px); /* Blur effect */
-    -webkit-backdrop-filter: blur(18px); /* Safari support */
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     padding: 20px 0px 0px 20px;
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Light border */
-  }
+}
+
+/* Pseudo-elements for extending lines */
+.chat-box::before,
+.chat-box::after,
+.chat-box div::before,
+.chat-box div::after {
+    content: "";
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5); /* Light lines */
+}
+
+/* Top & Bottom solid lines */
+.chat-box::before,
+.chat-box::after {
+    right: -5%;
+    width: 300%; /* Extends the full viewport width */
+    height: 2px;
+}
+
+.chat-box::before {
+    top: 0;
+}
+
+.chat-box::after {
+    bottom: 0;
+}
+
+/* Left & Right dashed lines */
+.chat-box div::before,
+.chat-box div::after {
+    top: -10%;
+    height: 200%; /* Extends the full viewport height */
+    width: 2px;
+    border-left: 2px dashed rgba(255, 255, 255, 0);
+}
+
+.chat-box div::before {
+    left: 0;
+}
+
+.chat-box div::after {
+    right: 0;
+}
 
   /* Messages container */
   .messages {
-    overflow-y: scroll;
+    overflow-y: scroll hidden;
     display: flex;
     flex-direction: column;
-    margin-bottom: -35%;
+    margin-bottom: -55%;
+    min-height: 35%;
     gap: 8px;
   }
   
@@ -63,7 +108,7 @@
   
   /* Input area */
   .input-container {
-    margin-top: 40%;
+    margin-top: 100%;
     margin-bottom: 3%;
     display: flex;
   }
@@ -97,6 +142,8 @@
   .chat-container h1 {
     font-size: 50px;
     color: white;
-    margin-right: 75%;
-    padding-left: 20px;
+    position: absolute;
+    left: 20px;
+    margin-top: 3.2%;
+    padding-right: 75%;
   }
