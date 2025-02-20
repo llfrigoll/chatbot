@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import "./App.css"; // Import the CSS file
+import "./App.css";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([
@@ -57,6 +57,7 @@ const Chatbot = () => {
 
   return (
     <div className="chat-container">
+      <h1>AI Opportnity Audit Bot</h1>
       <div className="chat-box">
         <div className="messages">
           {messages.map((msg, index) => (

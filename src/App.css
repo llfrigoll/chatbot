@@ -12,10 +12,10 @@
   /* Chat box */
   .chat-box {
     width: 100%;
-    height: 100%;
-    max-width: 600px;
-    margin-top: 50px;
-    margin-bottom: 10%;
+    height: 100vh;
+    max-height: 90%;
+    max-width: 50%;
+    margin-top: -8%;
     display: flex;
     flex-direction: column;
     background: rgba(255, 255, 255, 0.18); /* Transparent white */
@@ -27,10 +27,10 @@
 
   /* Messages container */
   .messages {
-    height: 400px;
-    overflow-y: auto;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
+    margin-bottom: -35%;
     gap: 8px;
   }
   
@@ -38,7 +38,7 @@
   .message {
     padding: 10px;
     border-radius: 8px;
-    max-width: 70%;
+    max-width: 50%;
     word-wrap: break-word;
   }
   
@@ -63,7 +63,8 @@
   
   /* Input area */
   .input-container {
-    margin-top: 16px;
+    margin-top: 40%;
+    margin-bottom: 3%;
     display: flex;
   }
   
@@ -93,3 +94,9 @@
     background-color: #2563eb;
   }
   
+  .chat-container h1 {
+    font-size: 50px;
+    color: white;
+    margin-right: 75%;
+    padding-left: 20px;
+  }
