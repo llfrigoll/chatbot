@@ -110,7 +110,17 @@ const Chatbot = () => {
           {Object.keys(answers).length > 0 && (
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-              onClick={() => alert(JSON.stringify(answers, null, 2))}
+              onClick={() => alert(JSON.stringify(messages
+                .filter(msg => msg.sender === "bot")
+                .filter((_, index) => index > 1)
+                .filter((_, index) => index < Object.values(answers).length - 1)
+                .map((msg, index) => {
+                  return {
+                    question: msg.text,
+                    answer: Object.values(answers)[index + 1]
+                  }
+                })
+              ))}
             >
               Review Answers
             </button>
