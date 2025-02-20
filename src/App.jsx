@@ -77,6 +77,7 @@ const Chatbot = () => {
     setQuestionIndex(null);
     setEmail("");
     setAnswers({});
+    setFixedMessages([])
   };
 
   return (

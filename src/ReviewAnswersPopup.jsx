@@ -1,42 +1,35 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-const ReviewAnswersPopup = ({ messages, answers, email, updateAnswers, fixedMessages }) => {
-  const [selectedQuestion, setSelectedQuestion] = useState("");
+const ReviewAnswersPopup = ({ answers, email, updateAnswers, fixedMessages }) => {
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [editedAnswer, setEditedAnswer] = useState("");
   const [originalAnswer, setOriginalAnswer] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [showSaveButton, setShowSaveButton] = useState(false);
 
-  // Extract relevant bot questions and map them to answers
-  const botQuestions = messages
-    .filter(msg => msg.sender === "bot")
-    .filter((_, index) => index > 1)
-    .filter((_, index) => index < Object.values(answers).length - 1)
-    .map((msg, index) => ({
-      question: msg.text,
-      answer: Object.values(answers)[index + 1],
-      index: index + 1 // Question index starts from 1
-    }));
-
   // Handle selecting a question
   const handleSelectChange = (event) => {
     const questionIndex = parseInt(event.target.value, 10);
-    
-    // ✅ Ensure we use the updated answers from state
-    const updatedAnswer = answers[questionIndex + 1] || "";
   
-    const selected = botQuestions.find(q => q.index === questionIndex);
-    if (selected) {
+    if (fixedMessages[questionIndex + 1]) {
+      const updatedAnswer = answers[questionIndex + 2] || ""; // ✅ Correct +2 offset
+  
       setSelectedQuestion({
-        ...selected,
-        answer: updatedAnswer
+        question: fixedMessages[questionIndex + 1].text, // ✅ Offset to match dropdown list
+        index: questionIndex + 1, // ✅ Adjust index
       });
-      setEditedAnswer(updatedAnswer);
-      setOriginalAnswer(updatedAnswer);
+  
+      // ✅ Wait for state updates before setting values
+      setTimeout(() => {
+        setEditedAnswer(updatedAnswer);
+        setOriginalAnswer(updatedAnswer);
+      }, 100);
+      
       setShowSaveButton(false);
     }
   };
+  
   
 
   // Handle answer change
@@ -52,36 +45,30 @@ const ReviewAnswersPopup = ({ messages, answers, email, updateAnswers, fixedMess
     const payload = {
       questionIndex: selectedQuestion.index,
       newAnswer: editedAnswer,
-      email: email
+      email: email,
     };
   
     try {
       const response = await fetch("https://liamalbrecht.app.n8n.cloud/webhook/6ce58298-46c7-4a4c-83a3-22b6375d7af9", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
   
       const data = await response.json();
       if (data.message) {
         alert(data.message);
   
-        // ✅ Update the `answers` state immediately
-        updateAnswers(prevAnswers => {
+        // ✅ Ensure answers state updates correctly
+        updateAnswers((prevAnswers) => {
           const updatedAnswers = {
             ...prevAnswers,
-            [selectedQuestion.index]: editedAnswer
+            [selectedQuestion.index + 1]: editedAnswer, // ✅ Ensure correct offset
           };
-  
-          // ✅ Ensure `selectedQuestion.answer` also updates
-          setSelectedQuestion(prev => ({
-            ...prev,
-            answer: editedAnswer
-          }));
-  
           return updatedAnswers;
         });
   
+        setOriginalAnswer(editedAnswer); // ✅ Ensure input field updates
         setShowSaveButton(false);
       } else {
         alert("Failed to save answer. Try again.");
@@ -91,6 +78,7 @@ const ReviewAnswersPopup = ({ messages, answers, email, updateAnswers, fixedMess
     }
   };
   
+
   return (
     <>
       <button 
@@ -111,18 +99,15 @@ const ReviewAnswersPopup = ({ messages, answers, email, updateAnswers, fixedMess
               onChange={handleSelectChange}
             >
               <option value="">-- Choose a Question --</option>
-              {botQuestions.map(q => (
-                <option key={q.index} value={q.index}>
-                  {q.question}
+              {fixedMessages.slice(1).map((question, index) => (
+                <option key={index} value={index}>
+                  {question.text}
                 </option>
               ))}
             </select>
 
             {selectedQuestion && (
               <>
-                <p className="mb-2 font-semibold">Question:</p>
-                <p className="mb-4">{selectedQuestion.question}</p>
-
                 <label className="block mb-2">Your Answer:</label>
                 <input
                   type="text"
@@ -146,10 +131,10 @@ const ReviewAnswersPopup = ({ messages, answers, email, updateAnswers, fixedMess
               className="bg-gray-500 text-white px-4 py-2 mt-4 rounded-lg w-full"
               onClick={() => {
                 setShowPopup(false);
-                setSelectedQuestion(""); // ✅ Clear selected question
-                setEditedAnswer(""); // ✅ Clear answer input
-                setOriginalAnswer(""); // ✅ Reset original answer
-                setShowSaveButton(false); // ✅ Hide save button
+                setSelectedQuestion(null);
+                setEditedAnswer("");
+                setOriginalAnswer("");
+                setShowSaveButton(false);
               }}
             >
               Close
@@ -162,12 +147,6 @@ const ReviewAnswersPopup = ({ messages, answers, email, updateAnswers, fixedMess
 };
 
 ReviewAnswersPopup.propTypes = {
-  messages: PropTypes.arrayOf(
-    PropTypes.shape({
-      text: PropTypes.string.isRequired,
-      sender: PropTypes.string.isRequired
-    })
-  ).isRequired,
   answers: PropTypes.object.isRequired,
   email: PropTypes.string.isRequired,
   updateAnswers: PropTypes.func.isRequired,
