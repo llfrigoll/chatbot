@@ -6,6 +6,7 @@ const Chatbot = () => {
   const [messages, setMessages] = useState(() => JSON.parse(localStorage.getItem("chatMessages")) || [
     { text: "Welcome business owner! If you're ready for your AI readiness evaluation type 'yes' to get started.", sender: "bot" }
   ]);
+  const [fixedMessages, setFixedMessages] = useState(() => JSON.parse(localStorage.getItem("fixedMessages")) || [])
   const [userInput, setUserInput] = useState("");
   const [questionIndex, setQuestionIndex] = useState(() => JSON.parse(localStorage.getItem("questionIndex")) || null);
   const [email, setEmail] = useState(() => localStorage.getItem("userEmail") || "");
@@ -17,8 +18,9 @@ const Chatbot = () => {
     localStorage.setItem("questionIndex", JSON.stringify(questionIndex));
     localStorage.setItem("userEmail", email);
     localStorage.setItem("answers", JSON.stringify(answers));
+    localStorage.setItem("fixedMessages", JSON.stringify(fixedMessages));
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, questionIndex, email, answers]);
+  }, [messages, questionIndex, email, answers, fixedMessages]);
 
   const sendToN8N = async (data) => {
     const response = await fetch("https://liamalbrecht.app.n8n.cloud/webhook/d0cfdecc-b7a5-4938-b299-e6bd10a980cd", {
@@ -56,6 +58,9 @@ const Chatbot = () => {
       if (data.question) {
         setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
         setQuestionIndex(nextIndex);
+      }
+      if (data.fixedQuestion) {
+        setFixedMessages((prev) => [...prev, { text: data.fixedQuestion }]);
       }
       
       if (data.question && data.question.includes("Fantastic, that should be it")) {
@@ -108,11 +113,12 @@ const Chatbot = () => {
           <button className="bg-blue-500 text-white px-4 py-2 rounded-lg" onClick={restartChat}>
             Restart
           </button>
-          {Object.keys(answers).length > 0 && (
+          {messages[messages.length - 1].text.includes("You'll receive your audit results via email shortly! If you'd like to review or change any answers, click 'Review Answers' below.") && (
             <ReviewAnswersPopup 
             messages={messages} 
             answers={answers} 
             email={email} 
+            fixedMessages={fixedMessages}
             updateAnswers={setAnswers} // Function to update answers state
           />
           )}

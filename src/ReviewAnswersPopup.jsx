@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-const ReviewAnswersPopup = ({ messages, answers, email, updateAnswers }) => {
+const ReviewAnswersPopup = ({ messages, answers, email, updateAnswers, fixedMessages }) => {
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [editedAnswer, setEditedAnswer] = useState("");
   const [originalAnswer, setOriginalAnswer] = useState("");
@@ -170,7 +170,8 @@ ReviewAnswersPopup.propTypes = {
   ).isRequired,
   answers: PropTypes.object.isRequired,
   email: PropTypes.string.isRequired,
-  updateAnswers: PropTypes.func.isRequired
+  updateAnswers: PropTypes.func.isRequired,
+  fixedMessages: PropTypes.array.isRequired
 };
 
 export default ReviewAnswersPopup;
