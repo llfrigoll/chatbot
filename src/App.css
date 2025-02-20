@@ -1,26 +1,30 @@
 /* Main container */
 .chat-container {
+    background-image: url('./assets/inlogic_backgroud.svg');
     height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #f3f4f6;
+    align-items: flex-end;
+    justify-content: right;
     padding: 16px;
   }
   
   /* Chat box */
   .chat-box {
     width: 100%;
-    max-width: 400px;
-    background-color: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    padding: 16px;
+    height: 100%;
+    max-width: 600px;
+    margin-top: 50px;
+    margin-bottom: 10%;
     display: flex;
     flex-direction: column;
+    background: rgba(255, 255, 255, 0.18); /* Transparent white */
+    backdrop-filter: blur(18px); /* Blur effect */
+    -webkit-backdrop-filter: blur(18px); /* Safari support */
+    padding: 20px 0px 0px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Light border */
   }
-  
+
   /* Messages container */
   .messages {
     height: 400px;
@@ -40,16 +44,21 @@
   
   /* Bot messages */
   .bot-message {
-    background-color: #3355ff71;
+    background-color: white;
     color: #3354ff;
     align-self: flex-start;
+    border-radius: 30px 30px 30px 10px;
+    padding: 10px 20px 10px 20px;
   }
   
   /* User messages */
   .user-message {
-    background-color: #e5e7eb;
-    color: black;
+    background-color: #3354ff;
+    color: white;
     align-self: flex-end;
+    margin-right: 10px;
+    border-radius: 30px 30px 10px 30px;
+    padding: 10px 20px 10px 20px;
   }
   
   /* Input area */
@@ -60,21 +69,24 @@
   
   /* Input field */
   .input-box {
+    background-color: white;
     flex: 1;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 6px 0 0 6px;
-    font-size: 16px;
+    padding: 10px 5px 10px 20px;
+    margin-right: 10px;
+    border-radius: 50px;
+    font-size: 14px;
   }
   
   /* Send button */
   .send-button {
-    background-color: #3b82f6;
+    background-color: #3354ff;
     color: white;
     border: none;
-    padding: 10px 16px;
-    border-radius: 0 6px 6px 0;
+    padding: 10px 50px;
+    margin-right: 10px;
+    border-radius: 50px;
     cursor: pointer;
+    font-size: 14px;
   }
   
   .send-button:hover {
