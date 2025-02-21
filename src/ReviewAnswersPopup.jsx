@@ -82,7 +82,7 @@ const ReviewAnswersPopup = ({ answers, email, updateAnswers, fixedMessages }) =>
   return (
     <>
       <button 
-        className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+        className="review_answers_button"
         onClick={() => setShowPopup(true)}
       >
         Review Answers

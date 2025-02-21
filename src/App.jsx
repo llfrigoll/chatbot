@@ -110,8 +110,8 @@ const Chatbot = () => {
             Send
           </button>
         </div>
-        <div className="mt-4 flex justify-between">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg" onClick={restartChat}>
+        <div className="restart_button_container">
+          <button className="restart_button" onClick={restartChat}>
             Restart
           </button>
           {messages[messages.length - 1].text.includes("You'll receive your audit results via email shortly! If you'd like to review or change any answers, click 'Review Answers' below.") && (
