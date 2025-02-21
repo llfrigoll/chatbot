@@ -310,7 +310,7 @@
 }
 
 /* Media Query: Adjustments for Mobile (max-width: 480px) */
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 600px) {
 /* Main container */
 .chat-container {
   height: 100vh;
