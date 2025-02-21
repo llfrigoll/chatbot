@@ -89,13 +89,13 @@ const ReviewAnswersPopup = ({ answers, email, updateAnswers, fixedMessages }) =>
       </button>
 
       {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <div className="popup_container">
+          <div className="popup_box">
             <h2 className="text-lg font-semibold mb-4">Review Your Answers</h2>
 
             <label className="block mb-2">Select a Question:</label>
             <select 
-              className="w-full p-2 border rounded-lg mb-4"
+              className="review_answers_dropdown"
               onChange={handleSelectChange}
             >
               <option value="">-- Choose a Question --</option>
