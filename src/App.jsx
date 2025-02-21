@@ -20,7 +20,7 @@ const Chatbot = () => {
     localStorage.setItem("userEmail", email);
     localStorage.setItem("answers", JSON.stringify(answers));
     localStorage.setItem("fixedMessages", JSON.stringify(fixedMessages));
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, questionIndex, email, answers, fixedMessages]);
 
   const sendToN8N = async (data) => {
@@ -82,32 +82,31 @@ const Chatbot = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
-      <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-4">
-        <div className="h-96 overflow-y-auto space-y-2">
+    <div className="chat-container">
+      <h1>AI Opportunity Audit Bot</h1>
+      <div className="chat-box">
+        <div className="messages">
           {messages.map((msg, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`p-2 rounded-lg max-w-xs ${
-                msg.sender === "bot" ? "bg-blue-500 text-white" : "bg-gray-300 ml-auto"
-              }`}
+              className={`message ${msg.sender === "bot" ? "bot-message" : "user-message"}`}
             >
               {msg.text}
             </motion.div>
           ))}
-          <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} style={{ height: "1px" }} /> {/* Small spacer */}
         </div>
-        <div className="mt-4 flex">
+        <div className="input-container">
           <input
             type="text"
-            className="flex-1 border p-2 rounded-l-lg"
+            className="input-box"
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
             placeholder="Type here..."
           />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-r-lg" onClick={handleSend}>
+          <button className="send-button" onClick={handleSend}>
             Send
           </button>
         </div>

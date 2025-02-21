@@ -71,11 +71,14 @@
 
   /* Messages container */
   .messages {
-    overflow-y: scroll hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-arrow-color: transparent;
+    scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
     display: flex;
     flex-direction: column;
     margin-bottom: -55%;
-    min-height: 35%;
+    min-height: 80%;
     gap: 8px;
   }
   
@@ -108,7 +111,7 @@
   
   /* Input area */
   .input-container {
-    margin-top: 100%;
+    margin-top: 60%;
     margin-bottom: 3%;
     display: flex;
   }
