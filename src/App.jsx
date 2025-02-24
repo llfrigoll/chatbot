@@ -12,7 +12,19 @@ const Chatbot = () => {
   const [questionIndex, setQuestionIndex] = useState(() => JSON.parse(localStorage.getItem("questionIndex")) || null);
   const [email, setEmail] = useState(() => localStorage.getItem("userEmail") || "");
   const [answers, setAnswers] = useState(() => JSON.parse(localStorage.getItem("answers")) || {});
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const numOfQuestions = 26;
+  // Calculate progress as a percentage (0 to 100).
+  const progressPercentage = questionIndex > 2
+  ? Math.round(((questionIndex - 2) / numOfQuestions) * 100)
+  : 0;
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("chatMessages", JSON.stringify(messages));
@@ -38,6 +50,7 @@ const Chatbot = () => {
   };
 
   const handleSend = async () => {
+    const inputEl = document.getElementsByClassName('input-box')
     if (!userInput.trim() || messages.some(
       message => message.text === targetMessage.text && message.sender === targetMessage.sender
     )) return;
@@ -46,29 +59,45 @@ const Chatbot = () => {
     setUserInput("");
 
     if (userInput.toLowerCase().includes("yes") && questionIndex === null) {
+      setIsTyping(true)
       const data = await sendToN8N({ questionIndex: 1 });
-      setQuestionIndex(1);
-      setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
+      if(data.question) {
+        setIsTyping(false)
+        setQuestionIndex(1);
+        setMessages((prev) => [...prev, { text: data.question, sender: "bot" }])
+    }
+
     } else if (questionIndex !== null) {
       const nextIndex = questionIndex + 1;
       if (nextIndex === 2) setEmail(userInput);
       
       setAnswers((prev) => ({ ...prev, [questionIndex]: userInput }));
+      setIsTyping(true)
       const data = await sendToN8N({ questionIndex: nextIndex, answer: userInput, email: nextIndex === 2 ? userInput : email });
       
       if (data.question) {
+        setIsTyping(false)
         setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
         setQuestionIndex(nextIndex);
       }
       if (data.fixedQuestion) {
+        setIsTyping(false)
         setFixedMessages((prev) => [...prev, { text: data.fixedQuestion }]);
       }
       
       if (data.question && data.question.includes("Fantastic, that should be it")) {
+        setIsTyping(false)
         setMessages((prev) => [...prev, { text: "You'll receive your audit results via email shortly! If you'd like to review or change any answers, click 'Review Answers' below.", sender: "bot" }]);
       }
     } else {
       setMessages((prev) => [...prev, { text: "Let me know when you're ready, type 'yes' to proceed.", sender: "bot" }]);
+    }
+    inputRef.current.focus();
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleSend();
     }
   };
 
@@ -85,25 +114,47 @@ const Chatbot = () => {
     <div className="chat-container">
       <h1>AI Opportunity Audit Bot</h1>
       <div className="chat-box">
+        {/* Progress Bar */}
+        <div className="progress-bar-container">
+          <div
+            className="progress-bar"
+            style={{ width: `${progressPercentage}%` }}
+          />
+        </div>
         <div className="messages">
-          {messages.map((msg, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`message ${msg.sender === "bot" ? "bot-message" : "user-message"}`}
-            >
-              {msg.text}
-            </motion.div>
-          ))}
+        {messages.map((msg, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`message ${msg.sender === "bot" ? "bot-message" : "user-message"}`}
+          >
+            {msg.text}
+          </motion.div>
+        ))}
+        {isTyping && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="message bot-message"
+          >
+            <div className="typing-indicator">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </motion.div>
+        )}
           <div ref={messagesEndRef} style={{ height: "1px" }} /> {/* Small spacer */}
         </div>
         <div className="input-container">
           <input
+          ref={inputRef}
             type="text"
             className="input-box"
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder="Type here..."
           />
           <button className="send-button" onClick={handleSend}>
