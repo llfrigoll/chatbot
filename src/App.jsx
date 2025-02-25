@@ -54,6 +54,18 @@ const Chatbot = () => {
     return response.json();
   };
 
+  const sendSubmitToN8N = async (email) => {
+    const response = await fetch(
+      "https://liamalbrecht.app.n8n.cloud/webhook/25e0bbd0-a49d-4106-b4e3-973ecb98f202", // Replace with your webhook URL
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      }
+    );
+    return response.json();
+  };
+
   const targetMessage = {
     text: "You'll receive your audit results via email shortly! Please review your answers by clicking 'Review Answers' below.",
     sender: "bot",
@@ -148,9 +160,35 @@ const Chatbot = () => {
     ]);
   };
 
-  const handleSubmit = () => {
-    // Placeholder for future submit logic
-    console.log("Submit button clicked!");
+  const handleSubmit = async () => {
+    if (!email) {
+      setMessages((prev) => [
+        ...prev,
+        { text: "No email provided. Please restart and provide an email.", sender: "bot" },
+      ]);
+      return;
+    }
+  
+    setIsTyping(true); // Show typing indicator
+    try {
+      const data = await sendSubmitToN8N(email);
+      setIsTyping(false); // Hide typing indicator
+      if (data.text) {
+        setMessages((prev) => [...prev, { text: data.text, sender: "bot" }]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { text: "Error: No confirmation message received.", sender: "bot" },
+        ]);
+      }
+    } catch (error) {
+      setIsTyping(false); // Hide typing indicator on error
+      setMessages((prev) => [
+        ...prev,
+        { text: "Error submitting answers. Please try again.", sender: "bot" },
+      ]);
+      console.error("Submit error:", error);
+    }
   };
 
   return (
