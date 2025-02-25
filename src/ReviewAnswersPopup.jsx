@@ -1,75 +1,54 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import "./ReviewAnswersPopup.css";
 
-const ReviewAnswersPopup = ({ answers, email, updateAnswers, fixedMessages }) => {
-  const [selectedQuestion, setSelectedQuestion] = useState(null);
-  const [editedAnswer, setEditedAnswer] = useState("");
-  const [originalAnswer, setOriginalAnswer] = useState("");
+const ReviewAnswersPopup = ({ answers, email, updateAnswers, fixedMessages, onFirstClose }) => {
+  const [editedAnswers, setEditedAnswers] = useState({ ...answers });
   const [showPopup, setShowPopup] = useState(false);
-  const [showSaveButton, setShowSaveButton] = useState(false);
+  const [changedQuestions, setChangedQuestions] = useState({});
+  const [hasBeenClosed, setHasBeenClosed] = useState(false); // Track if popup has been closed
 
-  // Handle selecting a question
-  const handleSelectChange = (event) => {
-    const questionIndex = parseInt(event.target.value, 10);
-  
-    if (fixedMessages[questionIndex + 1]) {
-      const updatedAnswer = answers[questionIndex + 2] || ""; // ✅ Correct +2 offset
-  
-      setSelectedQuestion({
-        question: fixedMessages[questionIndex + 1].text, // ✅ Offset to match dropdown list
-        index: questionIndex + 1, // ✅ Adjust index
-      });
-  
-      // ✅ Wait for state updates before setting values
-      setTimeout(() => {
-        setEditedAnswer(updatedAnswer);
-        setOriginalAnswer(updatedAnswer);
-      }, 100);
-      
-      setShowSaveButton(false);
-    }
-  };
-  
-  
-
-  // Handle answer change
-  const handleAnswerChange = (event) => {
-    setEditedAnswer(event.target.value);
-    setShowSaveButton(event.target.value !== originalAnswer);
+  // Handle answer change for a specific question
+  const handleAnswerChange = (questionIndex, newValue) => {
+    setEditedAnswers((prev) => ({
+      ...prev,
+      [questionIndex]: newValue,
+    }));
+    setChangedQuestions((prev) => ({
+      ...prev,
+      [questionIndex]: newValue !== answers[questionIndex],
+    }));
   };
 
-  // Handle saving the answer
-  const handleSave = async () => {
-    if (!selectedQuestion) return;
-  
+  // Handle saving the edited answer
+  const handleSave = async (questionIndex) => {
     const payload = {
-      questionIndex: selectedQuestion.index,
-      newAnswer: editedAnswer,
-      email: email,
+      questionIndex,
+      newAnswer: editedAnswers[questionIndex],
+      email,
     };
-  
+
     try {
-      const response = await fetch("https://liamalbrecht.app.n8n.cloud/webhook/6ce58298-46c7-4a4c-83a3-22b6375d7af9", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-  
+      const response = await fetch(
+        "https://liamalbrecht.app.n8n.cloud/webhook/6ce58298-46c7-4a4c-83a3-22b6375d7af9",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
       const data = await response.json();
       if (data.message) {
         alert(data.message);
-  
-        // ✅ Ensure answers state updates correctly
-        updateAnswers((prevAnswers) => {
-          const updatedAnswers = {
-            ...prevAnswers,
-            [selectedQuestion.index + 1]: editedAnswer, // ✅ Ensure correct offset
-          };
-          return updatedAnswers;
-        });
-  
-        setOriginalAnswer(editedAnswer); // ✅ Ensure input field updates
-        setShowSaveButton(false);
+        updateAnswers((prevAnswers) => ({
+          ...prevAnswers,
+          [questionIndex]: editedAnswers[questionIndex],
+        }));
+        setChangedQuestions((prev) => ({
+          ...prev,
+          [questionIndex]: false,
+        }));
       } else {
         alert("Failed to save answer. Try again.");
       }
@@ -77,11 +56,22 @@ const ReviewAnswersPopup = ({ answers, email, updateAnswers, fixedMessages }) =>
       alert("Error saving answer. Error message: " + error);
     }
   };
-  
+
+  // Handle closing the popup
+  const handleClose = () => {
+    setShowPopup(false);
+    setEditedAnswers({ ...answers }); // Reset to original answers
+    setChangedQuestions({});
+
+    if (!hasBeenClosed) {
+      setHasBeenClosed(true);
+      onFirstClose(); // Trigger the callback only the first time
+    }
+  };
 
   return (
     <>
-      <button 
+      <button
         className="review_answers_button"
         onClick={() => setShowPopup(true)}
       >
@@ -91,52 +81,42 @@ const ReviewAnswersPopup = ({ answers, email, updateAnswers, fixedMessages }) =>
       {showPopup && (
         <div className="popup_container">
           <div className="popup_box">
-            <h2 className="text-lg font-semibold mb-4">Review Your Answers</h2>
+            <h2 className="popup_title">Review Your Answers</h2>
 
-            <label className="block mb-2">Select a Question:</label>
-            <select 
-              className="review_answers_dropdown"
-              onChange={handleSelectChange}
-            >
-              <option value="">-- Choose a Question --</option>
-              {fixedMessages.slice(1).map((question, index) => (
-                <option key={index} value={index}>
-                  {question.text}
-                </option>
-              ))}
-            </select>
+            <div className="questions_list">
+              {fixedMessages.slice(1).map((question, index) => {
+                const questionIndex = index + 2; // Adjust for offset
+                const answer = editedAnswers[questionIndex] || "";
+                const isChanged = changedQuestions[questionIndex];
 
-            {selectedQuestion && (
-              <>
-                <label className="block mb-2">Your Answer:</label>
-                <input
-                  type="text"
-                  className="w-full p-2 border rounded-lg"
-                  value={editedAnswer}
-                  onChange={handleAnswerChange}
-                />
+                return (
+                  <div key={index} className="question_item">
+                    <div className="question_text">{question.text}</div>
+                    <div className="answer_container">
+                      <input
+                        type="text"
+                        className="answer_input"
+                        value={answer}
+                        onChange={(e) =>
+                          handleAnswerChange(questionIndex, e.target.value)
+                        }
+                        placeholder="Your answer..."
+                      />
+                      {isChanged && (
+                        <button
+                          className="save_button"
+                          onClick={() => handleSave(questionIndex)}
+                        >
+                          Save
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
 
-                {showSaveButton && (
-                  <button 
-                    className="bg-green-500 text-white px-4 py-2 mt-4 rounded-lg"
-                    onClick={handleSave}
-                  >
-                    Save Changes
-                  </button>
-                )}
-              </>
-            )}
-
-            <button 
-              className="bg-blue-500 text-white px-4 py-2 mt-4 rounded-lg w-full"
-              onClick={() => {
-                setShowPopup(false);
-                setSelectedQuestion(null);
-                setEditedAnswer("");
-                setOriginalAnswer("");
-                setShowSaveButton(false);
-              }}
-            >
+            <button className="close_button" onClick={handleClose}>
               Close
             </button>
           </div>
@@ -150,7 +130,8 @@ ReviewAnswersPopup.propTypes = {
   answers: PropTypes.object.isRequired,
   email: PropTypes.string.isRequired,
   updateAnswers: PropTypes.func.isRequired,
-  fixedMessages: PropTypes.array.isRequired
+  fixedMessages: PropTypes.array.isRequired,
+  onFirstClose: PropTypes.func.isRequired, // New prop for callback
 };
 
 export default ReviewAnswersPopup;

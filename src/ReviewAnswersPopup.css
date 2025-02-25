@@ -1,0 +1,141 @@
+/* Popup container (unchanged) */
+.popup_container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  /* Popup box */
+  .popup_box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Popup title */
+  .popup_title {
+    font-size: 24px;
+    color: #3354ff;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Scrollable questions list */
+  .questions_list {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(51, 84, 255, 0.5) transparent;
+    padding-right: 10px;
+  }
+  
+  /* Individual question item */
+  .question_item {
+    margin-bottom: 20px;
+  }
+  
+  /* Question text */
+  .question_text {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+  }
+  
+  /* Answer container (input + save button) */
+  .answer_container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Answer input field */
+  .answer_input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+  
+  .answer_input:focus {
+    outline: none;
+    border-color: #3354ff;
+    box-shadow: 0 0 0 2px rgba(51, 84, 255, 0.2);
+  }
+  
+  /* Save button (appears when answer is changed) */
+  .save_button {
+    background-color: #3354ff;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  
+  .save_button:hover {
+    background-color: #2563eb;
+  }
+  
+  /* Close button */
+  .close_button {
+    background-color: #3354ff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50px;
+    font-size: 14px;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+  
+  .close_button:hover {
+    background-color: #2563eb;
+  }
+  
+  /* Responsive adjustments */
+  @media screen and (max-width: 600px) {
+    .popup_box {
+      width: 95%;
+      padding: 15px;
+    }
+  
+    .popup_title {
+      font-size: 20px;
+    }
+  
+    .question_text {
+      font-size: 12px;
+    }
+  
+    .answer_input {
+      font-size: 12px;
+      padding: 6px 10px;
+    }
+  
+    .save_button {
+      padding: 5px 12px;
+      font-size: 10px;
+    }
+  
+    .close_button {
+      padding: 8px;
+      font-size: 12px;
+    }
+  }
