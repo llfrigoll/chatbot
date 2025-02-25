@@ -113,7 +113,7 @@ const Chatbot = () => {
         setFixedMessages((prev) => [...prev, { text: data.fixedQuestion }]);
       }
 
-      if (data.question && data.question.includes("Fantastic, that should be it")) {
+      if (data.question && data.question.includes("Fantastic, that should be it!")) {
         setIsTyping(false);
         setMessages((prev) => [
           ...prev,
@@ -170,6 +170,10 @@ const Chatbot = () => {
     }
   
     setIsTyping(true); // Show typing indicator
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    }, 50); // Small delay to allow DOM update
+  
     try {
       const data = await sendSubmitToN8N(email);
       setIsTyping(false); // Hide typing indicator
@@ -181,12 +185,14 @@ const Chatbot = () => {
           { text: "Error: No confirmation message received.", sender: "bot" },
         ]);
       }
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }); // Scroll after new message
     } catch (error) {
       setIsTyping(false); // Hide typing indicator on error
       setMessages((prev) => [
         ...prev,
         { text: "Error submitting answers. Please try again.", sender: "bot" },
       ]);
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }); // Scroll after error
       console.error("Submit error:", error);
     }
   };

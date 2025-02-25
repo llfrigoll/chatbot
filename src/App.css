@@ -185,6 +185,11 @@
     padding: 5px 20px 5px 20px;
     border-radius: 50px;
     font-size: 14px;
+    cursor: pointer;
+  }
+
+  .restart_button:hover {
+    background-color: #2563eb;
   }
 
   .review_answers_button {
@@ -194,6 +199,11 @@
     border-radius: 50px;
     font-size: 14px;
     margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .review_answers_button:hover {
+    background-color: #2563eb;
   }
 
   .typing-indicator {
