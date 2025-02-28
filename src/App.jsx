@@ -67,7 +67,7 @@ const Chatbot = () => {
   };
 
   const targetMessage = {
-    text: "You'll receive your audit results via email shortly! Please review your answers by clicking 'Review Answers' below.",
+    text: "In order to submit your answers, please review them first by clicking 'Review Answers' below.",
     sender: "bot",
   };
 
@@ -118,7 +118,7 @@ const Chatbot = () => {
         setMessages((prev) => [
           ...prev,
           {
-            text: "You'll receive your audit results via email shortly! Please review your answers by clicking 'Review Answers' below.",
+            text: "In order to submit your answers, please review them first by clicking 'Review Answers' below.",
             sender: "bot",
           },
         ]);
@@ -262,7 +262,7 @@ const Chatbot = () => {
           </button>
           {messages.some((msg) =>
             msg.text.includes(
-              "You'll receive your audit results via email shortly! Please review your answers by clicking 'Review Answers' below."
+              "In order to submit your answers, please review them first by clicking 'Review Answers' below."
             )
           ) && (
             <ReviewAnswersPopup
