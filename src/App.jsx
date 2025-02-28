@@ -7,7 +7,7 @@ const Chatbot = () => {
   const [messages, setMessages] = useState(() =>
     JSON.parse(localStorage.getItem("chatMessages")) || [
       {
-        text: "Welcome business owner! If you're ready for your AI readiness evaluation type 'yes' to get started.",
+        text: "Hi, I am an AI Opportunity Audit bot by Balmer Agency - if you answer a few questions for me I can provide an evaluation on your business.",
         sender: "bot",
       },
     ]
@@ -142,7 +142,7 @@ const Chatbot = () => {
     localStorage.clear();
     setMessages([
       {
-        text: "Welcome business owner! If you're ready for your AI readiness evaluation type 'yes' to get started.",
+        text: "Hi, I am an AI Opportunity Audit bot by Balmer Agency - if you answer a few questions for me I can provide an evaluation on your business.",
         sender: "bot",
       },
     ]);
