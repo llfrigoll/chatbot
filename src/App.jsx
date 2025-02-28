@@ -312,6 +312,7 @@ const Chatbot = () => {
               email={email}
               fixedMessages={fixedMessages}
               updateAnswers={setAnswers}
+              updateEmail={setEmail}
               onFirstClose={handleFirstClose}
             />
           )}
