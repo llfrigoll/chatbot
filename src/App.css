@@ -276,6 +276,10 @@
   background-color: #2563eb;
 }
 
+.submit-button-container::after {
+  opacity: 0;
+}
+
 /* Media Query: Adjustments for Laptop Screens */
 @media screen and (max-width: 1440px) {
 /* Main container */
