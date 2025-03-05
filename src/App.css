@@ -278,10 +278,14 @@
     font-size: 14px;
     margin-left: 10px;
     cursor: pointer;
+    border-width: 1px;
+    border-color: #2faeb6;
+    transition: 0.3s;
   }
 
   .review_answers_button:hover {
-    background-color: #13a6b0;
+    background-color: white;
+    color: #2faeb6;
   }
 
   .typing-indicator {

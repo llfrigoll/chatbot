@@ -38,7 +38,7 @@
     flex: 1;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: rgba(51, 84, 255, 0.5) transparent;
+    scrollbar-color: rgba(47, 174, 182, 0.5) transparent;
     padding-right: 10px;
   }
   
@@ -104,16 +104,8 @@
     font-size: 14px;
     margin-top: 20px;
     cursor: pointer;
-    border-width: 1px;
-    border-color: #f27472;
-    transition: 0.3s;
   }
-  
-  .close_button:hover {
-    background-color: #f2f2f2;
-    color: #f27472;
-  }
-  
+    
   /* Responsive adjustments */
   @media screen and (max-width: 600px) {
     .popup_box {
