@@ -7,7 +7,7 @@ const Chatbot = () => {
   const [messages, setMessages] = useState(() =>
     JSON.parse(localStorage.getItem("chatMessages")) || [
       {
-        text: "Hi, I am an AI Opportunity Audit bot by Balmer Agency - if you answer a few questions for me I can provide an evaluation on your business.",
+        text: "Hi, I am an AI Opportunity Audit bot by Balmer Agency - if you answer a few questions for me I can provide an evaluation on your business. This survey should take about 10-15 minutes to complete",
         sender: "bot",
       },
     ]
@@ -86,90 +86,135 @@ const Chatbot = () => {
   };
 
   const handleSend = async () => {
-    if (
-      !userInput.trim() ||
-      messages.some(
-        (message) => message.text === targetMessage.text && message.sender === targetMessage.sender
-      )
-    )
-      return;
-
+    if (!userInput.trim()) return;
+  
     setMessages((prev) => [...prev, { text: userInput, sender: "user" }]);
     setUserInput("");
-
-    let tempConMessage = ""
-    if(initialised === false){
+  
+    let tempConMessage = "";
+    if (!initialised) {
       setIsTyping(true);
-      const confirmation = await sendConfirmationToN8N(userInput)
-      if(confirmation.text) {
-        setConMessage(confirmation.text)
-        tempConMessage = confirmation.text
-        if(confirmation.text.includes("yes")){
-          setInitialised(true)
+      const confirmation = await sendConfirmationToN8N(userInput);
+  
+      if (confirmation.text) {
+        setConMessage(confirmation.text);
+        tempConMessage = confirmation.text;
+  
+        if (confirmation.text.toLowerCase().includes("yes")) {
+          setInitialised(true);
         }
       }
+  
+      // Handle questions before starting
+      if (userInput.includes("?")) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: "Great question! This survey helps assess the AI readiness of your business. It takes about 5-10 minutes. Let me know if you need more info. If you're ready, just say 'yes'!",
+            sender: "bot",
+          },
+        ]);
+        setIsTyping(false);
+        return;
+      }
     }
-
-    if(tempConMessage !== "" || conMessage !== ""){
-      if ((conMessage.includes("yes") || tempConMessage.includes("yes")) && questionIndex === null) {
-        setIsTyping(true);
-        const data = await sendToN8N({ questionIndex: 1 });
-        if (data.question) {
-          setIsTyping(false);
-          setQuestionIndex(1);
-          setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
-        }
-      } else if (questionIndex !== null) {
-        const nextIndex = questionIndex + 1;
-        if (nextIndex === 2) setEmail(userInput);
-
-        setAnswers((prev) => ({ ...prev, [questionIndex]: userInput }));
-        setIsTyping(true);
-        const data = await sendToN8N({
-          questionIndex: nextIndex,
-          answer: userInput,
-          email: nextIndex === 2 ? userInput : email,
-        });
-
-        if (data.question) {
-          setIsTyping(false);
-          setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
-          setQuestionIndex(nextIndex);
-        }
-        if (data.fixedQuestion) {
-          setIsTyping(false);
-          setFixedMessages((prev) => [...prev, { text: data.fixedQuestion }]);
-        }
-
-        if (data.question && data.question.includes("Fantastic, that should be it!")) {
-          setIsTyping(false);
+  
+    // Improved initial message
+    if (!initialised && messages.length === 1) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "Welcome! This survey will take around 5-10 minutes and helps assess the AI readiness of your business. If you have any questions about the process, feel free to ask! Otherwise, type 'yes' to begin.",
+          sender: "bot",
+        },
+      ]);
+      setIsTyping(false);
+      return;
+    }
+  
+    if ((conMessage.includes("yes") || tempConMessage.includes("yes")) && questionIndex === null) {
+      setIsTyping(true);
+      const data = await sendToN8N({ questionIndex: 1 });
+  
+      if (data.question) {
+        setIsTyping(false);
+        setQuestionIndex(1);
+        setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
+      }
+    } else if (questionIndex !== null) {
+      const nextIndex = questionIndex + 1;
+  
+      if (nextIndex === 2) {
+        if (!userInput.includes("@")) {
           setMessages((prev) => [
             ...prev,
-            {
-              text: "In order to submit your answers, please review them first by clicking 'Review Answers' below.",
-              sender: "bot",
-            },
+            { text: "Please provide a valid email address before continuing.", sender: "bot" },
           ]);
+          setIsTyping(false);
+          return;
         }
+        setEmail(userInput);
+      }
+  
+      setAnswers((prev) => ({ ...prev, [questionIndex]: userInput }));
+      setIsTyping(true);
+  
+      const data = await sendToN8N({
+        questionIndex: nextIndex,
+        answer: userInput,
+        email: nextIndex === 2 ? userInput : email,
+      });
+  
+      if (data.question) {
+        setIsTyping(false);
+        setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
+        setQuestionIndex(nextIndex);
+      }
+  
+      if (data.fixedQuestion) {
+        setIsTyping(false);
+        setFixedMessages((prev) => [...prev, { text: data.fixedQuestion }]);
+      }
+  
+      if (data.question && data.question.includes("Fantastic, that should be it!")) {
+        setIsTyping(false);
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: "In order to submit your answers, please review them first by clicking 'Review Answers' below.",
+            sender: "bot",
+          },
+        ]);
+      }
+    } else {
+      // Handle general questions & greetings
+      const lowerInput = userInput.toLowerCase();
+      if (["hello", "hi", "hey"].some((greeting) => lowerInput.startsWith(greeting))) {
+        setMessages((prev) => [
+          ...prev,
+          { text: "Hey there! This survey takes about 5-10 minutes. Let me know if you have any questions before we start! Otherwise, type 'yes' to begin.", sender: "bot" },
+        ]);
+      } else if (lowerInput.includes("not sure") || lowerInput.includes("maybe")) {
+        setMessages((prev) => [
+          ...prev,
+          { text: "No worries! Take your time, let me know when you're ready.", sender: "bot" },
+        ]);
+      } else if (lowerInput.includes("What's this about?")) {
+        setMessages((prev) => [
+          ...prev,
+          { text: "That's a great question! This survey helps assess [survey purpose]. It should only take about 5-10 minutes. Let me know if you need more details!", sender: "bot" },
+        ]);
       } else {
-        if((conMessage.includes("no") || tempConMessage.includes("no"))){
-          setIsTyping(false);
-          setMessages((prev) => [
-            ...prev,
-            { text: "No worries, let me know when you're ready.", sender: "bot" },
-          ]);
-        }else {
-          setIsTyping(false);
-          setMessages((prev) => [
-            ...prev,
-            { text: "I didn't quite get that, would you mind rephrasing your answer?", sender: "bot" },
-          ]);
-        }
-        
+        setMessages((prev) => [
+          ...prev,
+          { text: "I see! Could you clarify if you're ready to start the survey?", sender: "bot" },
+        ]);
       }
+      setIsTyping(false);
     }
+  
     inputRef.current.focus();
-  };
+  };  
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -181,7 +226,7 @@ const Chatbot = () => {
     localStorage.clear();
     setMessages([
       {
-        text: "Hi, I am an AI Opportunity Audit bot by Balmer Agency - if you answer a few questions for me I can provide an evaluation on your business.",
+        text: "Hi, I am an AI Opportunity Audit bot by Balmer Agency - if you answer a few questions for me I can provide an evaluation on your business. This survey should take around 10-15 minutes.",
         sender: "bot",
       },
     ]);
@@ -205,7 +250,7 @@ const Chatbot = () => {
     if (!email) {
       setMessages((prev) => [
         ...prev,
-        { text: "No email provided. Please restart and provide an email.", sender: "bot" },
+        { text: "No email provided. Please provide an email before continuing.", sender: "bot" },
       ]);
       return;
     }
