@@ -352,7 +352,7 @@
 }
 
 .popup_container {
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(12px);
 }
 
 /* Media Query: Adjustments for Laptop Screens */
