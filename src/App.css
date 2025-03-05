@@ -344,7 +344,7 @@
 }
 
 .popup_title {
-  color: #2faeb6;
+  color: rgb(47, 174, 182)
 }
 
 .close_button {
@@ -353,6 +353,8 @@
 
 .popup_container {
   backdrop-filter: blur(12px);
+  border-radius: 10px;
+  transition: 0.3s;
 }
 
 /* Media Query: Adjustments for Laptop Screens */
