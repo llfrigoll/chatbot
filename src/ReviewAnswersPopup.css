@@ -105,6 +105,10 @@
     margin-top: 20px;
     cursor: pointer;
   }
+
+  .close_button:hover {
+    background-color: #ea5b59;
+  }
     
   /* Responsive adjustments */
   @media screen and (max-width: 600px) {
