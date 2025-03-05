@@ -285,7 +285,8 @@ const Chatbot = () => {
 
   return (
     <div className="chat-container">
-      <h1>AI Opportunity Audit Bot</h1>
+      <h1>BALMER AGENCY</h1>
+      <p>Artificial intelligence opportunity bot</p>
       <div className="chat-box">
         <div className="progress-bar-container">
           <div className="progress-bar" style={{ width: `${progressPercentage}%` }} />

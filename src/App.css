@@ -1,6 +1,6 @@
 /* Main container */
 .chat-container {
-    background-image: url('/inlogic_backgroud.svg');
+    background-color: #000000;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -8,6 +8,7 @@
     justify-content: right;
     overflow: hidden;
     padding-right: 1.5%;
+    font-family: 'karla';
   }
   
   /* Chat box container */
@@ -17,65 +18,23 @@
     height: 100vh;
     max-height: 93%;
     max-width: 65%;
-    margin-top: 2%;
+    margin-top: -5%;
     display: flex;
     flex-direction: column;
     background: rgba(255, 255, 255, 0.18);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     padding: 50px 0px 1% 20px;
-}
-
-/* Pseudo-elements for extending lines */
-.chat-box::before,
-.chat-box::after,
-.chat-box div::before,
-.chat-box div::after {
-    content: "";
-    position: absolute;
-    background: rgba(255, 255, 255, 0.5); /* Light lines */
-}
-
-/* Top & Bottom solid lines */
-.chat-box::before,
-.chat-box::after {
-    right: -5%;
-    width: 300%; /* Extends the full viewport width */
-    height: 2px;
-}
-
-.chat-box::before {
-    top: 0;
-}
-
-.chat-box::after {
-    bottom: 0;
-}
-
-/* Left & Right dashed lines */
-.chat-box div::before,
-.chat-box div::after {
-    top: -20%;
-    height: 500%; /* Extends the full viewport height */
-    border-left: 2px dashed rgba(255, 255, 255, 0);
-    margin-left: -2px;
-}
-
-.chat-box div::before {
-    left: 0;
-}
-
-.chat-box div::after {
-    right: 0;
+    border-radius: 10px;
 }
 
 /* Progress bar container */
 .progress-bar-container {
-  width: 90%;                  /* Fill most of the chat box width */
+  width: 98%;                  /* Fill most of the chat box width */
   height: 10px;                /* Thin horizontal bar */
-  background-color: rgba(255, 255, 255, 0.2); 
-  border-radius: 5px;
-  margin: 0 5% 20px 5%;        /* Center it horizontally, space at bottom */
+  background-color: rgba(255, 255, 255, 0.18);
+  border-radius: 5px; 
+  margin: -3% 5% 20px 0%;        /* Center it horizontally, space at bottom */
   overflow: hidden;            /* Ensures bar corners remain rounded */
   position: relative;
   
@@ -84,26 +43,50 @@
 /* Actual progress fill */
 .progress-bar {
   height: 100%;
-  background-color: #3354ff;   /* Matches the user-message color scheme */
+  background-color: #2faeb6;   /* Matches the user-message color scheme */
   border-radius: 5px;
   transition: width 0.4s ease; /* Smooth fill animation */
 }
 
+/* Messages container */
+.messages {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: -55%;
+  height: 80%;
+  gap: 8px;
+  padding: 20px 0px 20px 20px;
+  margin-right: 2%;
+  background-color: white;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
 
-  /* Messages container */
-  .messages {
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-arrow-color: transparent;
-    scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: -55%;
-    height: 80%;
-    gap: 8px;
-    padding-left: 50px;
-  }
-  
+/* WebKit-based browsers (Chrome, Edge, Safari) */
+.messages::-webkit-scrollbar {
+  width: 8px;
+  border-radius: 2%;
+}
+
+/* Scrollbar Track */
+.messages::-webkit-scrollbar-track {
+  background: transparent;
+  border-top-right-radius: 2%;
+  border-bottom-right-radius: 2%;
+}
+
+/* Scrollbar Thumb */
+.messages::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50px; /* Ensures a rounded scrollbar */
+  margin-right: 2px;
+}
+
   /* Chat message bubbles */
   .message {
     border-radius: 8px;
@@ -114,20 +97,20 @@
   
   /* Bot messages */
   .bot-message {
-    background-color: white;
-    color: #3354ff;
+    background-color: lightgrey;
+    color: black;
     align-self: flex-start;
-    border-radius: 30px 30px 30px 10px;
+    border-radius: 10px 10px 10px 0px;
     padding: 10px 20px 10px 20px;
   }
   
   /* User messages */
   .user-message {
-    background-color: #3354ff;
+    background-color: black;
     color: white;
     align-self: flex-end;
-    margin-right: 50px;
-    border-radius: 30px 30px 10px 30px;
+    margin-right: 30px;
+    border-radius: 10px 10px 0px 10px;
     padding: 10px 21px 10px 21px;
     position: relative;
   }
@@ -141,7 +124,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #3354ff; /* Match the user message background */
+  background-color: black; /* Match the user message background */
   z-index: 1; /* Ensure it's above the message lines */
 }
 
@@ -150,7 +133,7 @@
     margin-top: 60%;
     margin-bottom: 3%;
     display: flex;
-    padding-left: 50px;
+    padding-left: 0px;
   }
   
   /* Input field */
@@ -159,55 +142,81 @@
     flex: 1;
     padding: 10px 5px 10px 20px;
     margin-right: 10px;
-    border-radius: 50px;
+    border-radius: 10px;
     font-size: 14px;
   }
   
   /* Send button */
   .send-button {
-    background-color: #3354ff;
+    background-color: #2faeb6;
     color: white;
-    border: none;
+    border-width: 2px;
+    border-color: #2faeb6;
     padding: 10px 50px;
-    margin-right: 50px;
-    border-radius: 50px;
+    margin-right: 20px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 14px;
+    transition: 0.3s;
   }
   
   .send-button:hover {
-    background-color: #2563eb;
+    background-color: black;
+    border-color: #2faeb6;
+    color: transparent;
+    border-width: 2px;
+  }
+
+  /* Add new text using ::after */
+  .send-button:hover::after {
+    content: "发送"; /* Chinese for 'Send' */
+    color: #2faeb6;
+    font-size: 14px;
+    position: absolute;
+    transform: translate(-110%, 0%);
   }
   
   .chat-container h1 {
     font-size: 50px;
+    font-weight: bold;
     color: white;
     position: absolute;
     left: 20px;
-    margin-top: 3.2%;
-    padding-right: 75%;
+    margin-top: 0.5%;
+    padding-right: 70%;
+  }
+
+  .chat-container p {
+    display: block;
+    margin-left: 0%;
+    margin-right: 81.5%;
+    margin-top: 5%;
+    color: white;
+    font-weight: lighter;
   }
 
   .restart_button_container {
     margin-top: -1.5%;
-    padding-left: 50px;
   }
 
   .restart_button {
-    background-color: #3354ff;
+    background-color: #f27472;
     color: white;
     padding: 5px 20px 5px 20px;
-    border-radius: 50px;
+    border-radius: 10px;
     font-size: 14px;
     cursor: pointer;
+    border-width: 1px;
+    border-color: #f27472;
   }
 
   .restart_button:hover {
-    background-color: #2563eb;
+    background-color: #f2f2f2;
+    color: #f27472;
   }
 
   .review_answers_button {
-    background-color: #3354ff;
+    background-color: #2faeb6;
     color: white;
     padding: 5px 20px 5px 20px;
     border-radius: 50px;
@@ -217,7 +226,7 @@
   }
 
   .review_answers_button:hover {
-    background-color: #2563eb;
+    background-color: #13a6b0;
   }
 
   .typing-indicator {
