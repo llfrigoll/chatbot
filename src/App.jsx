@@ -7,7 +7,7 @@ const Chatbot = () => {
   const [messages, setMessages] = useState(() =>
     JSON.parse(localStorage.getItem("chatMessages")) || [
       {
-        text: "Hi, I am an AI Opportunity Audit bot by Balmer Agency - if you answer a few questions for me I can provide an evaluation on your business. This survey should take about 10-15 minutes to complete",
+        text: "Hi, I am an AI Opportunity Audit bot by Balmer Agency - if you answer a few questions for me I can provide an evaluation on your business.",
         sender: "bot",
       },
     ]
@@ -22,12 +22,13 @@ const Chatbot = () => {
   const [email, setEmail] = useState(() => localStorage.getItem("userEmail") || "");
   const [answers, setAnswers] = useState(() => JSON.parse(localStorage.getItem("answers")) || {});
   const [isTyping, setIsTyping] = useState(false);
-  const [initialised, setInitialised] = useState(false)
-  const [conMessage, setConMessage] = useState("")
+  const [initialised, setInitialised] = useState(false);
+  const [conMessage, setConMessage] = useState("");
+  const [exampleAnswers, setExampleAnswers] = useState([]); // New state for example answers
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  const numOfQuestions = 26;
+  const numOfQuestions = 19;
   const progressPercentage =
     questionIndex > 2 ? Math.round(((questionIndex - 2) / numOfQuestions) * 100) : 0;
 
@@ -58,7 +59,7 @@ const Chatbot = () => {
 
   const sendSubmitToN8N = async (email) => {
     const response = await fetch(
-      "https://liamalbrecht.app.n8n.cloud/webhook/25e0bbd0-a49d-4106-b4e3-973ecb98f202", // Replace with your webhook URL
+      "https://liamalbrecht.app.n8n.cloud/webhook/25e0bbd0-a49d-4106-b4e3-973ecb98f202",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -70,7 +71,7 @@ const Chatbot = () => {
 
   const sendConfirmationToN8N = async (text) => {
     const response = await fetch(
-      "https://liamalbrecht.app.n8n.cloud/webhook/f7c8632e-d2e5-4192-8129-b9b7f63f79ee", // Replace with your webhook URL
+      "https://liamalbrecht.app.n8n.cloud/webhook/f7c8632e-d2e5-4192-8129-b9b7f63f79ee",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -80,32 +81,27 @@ const Chatbot = () => {
     return response.json();
   };
 
-  const targetMessage = {
-    text: "In order to submit your answers, please review them first by clicking 'Review Answers' below.",
-    sender: "bot",
-  };
-
   const handleSend = async () => {
     if (!userInput.trim()) return;
-  
+
     setMessages((prev) => [...prev, { text: userInput, sender: "user" }]);
     setUserInput("");
-  
+    setExampleAnswers([]);
+
     let tempConMessage = "";
     if (!initialised) {
       setIsTyping(true);
       const confirmation = await sendConfirmationToN8N(userInput);
-  
+
       if (confirmation.text) {
         setConMessage(confirmation.text);
         tempConMessage = confirmation.text;
-  
+
         if (confirmation.text.toLowerCase().includes("yes")) {
           setInitialised(true);
         }
       }
-  
-      // Handle questions before starting
+
       if (userInput.includes("?")) {
         setMessages((prev) => [
           ...prev,
@@ -118,8 +114,7 @@ const Chatbot = () => {
         return;
       }
     }
-  
-    // Improved initial message
+
     if (!initialised && messages.length === 1) {
       setMessages((prev) => [
         ...prev,
@@ -131,19 +126,20 @@ const Chatbot = () => {
       setIsTyping(false);
       return;
     }
-  
+
     if ((conMessage.includes("yes") || tempConMessage.includes("yes")) && questionIndex === null) {
       setIsTyping(true);
       const data = await sendToN8N({ questionIndex: 1 });
-  
+
       if (data.question) {
         setIsTyping(false);
         setQuestionIndex(1);
         setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
+        if (data.example_answers) setExampleAnswers(data.example_answers); // Store example answers
       }
     } else if (questionIndex !== null) {
       const nextIndex = questionIndex + 1;
-  
+
       if (nextIndex === 2) {
         if (!userInput.includes("@")) {
           setMessages((prev) => [
@@ -155,39 +151,41 @@ const Chatbot = () => {
         }
         setEmail(userInput);
       }
-  
+
       setAnswers((prev) => ({ ...prev, [questionIndex]: userInput }));
       setIsTyping(true);
-  
+
       const data = await sendToN8N({
         questionIndex: nextIndex,
         answer: userInput,
         email: nextIndex === 2 ? userInput : email,
       });
-  
+
       if (data.question) {
         setIsTyping(false);
         setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
         setQuestionIndex(nextIndex);
+        if (data.example_answers) setExampleAnswers(data.example_answers); // Store example answers
+        else setExampleAnswers([]); // Clear if no new example answers
       }
-  
+
       if (data.fixedQuestion) {
         setIsTyping(false);
         setFixedMessages((prev) => [...prev, { text: data.fixedQuestion }]);
       }
-  
+
       if (data.question && data.question.includes("Fantastic, that should be it!")) {
         setIsTyping(false);
         setMessages((prev) => [
           ...prev,
           {
-            text: "In order to submit your answers, please review them first by clicking 'Review Answers' below.",
+            text: "In order to generate your report, please review your answers first by clicking 'Review Answers' below.",
             sender: "bot",
           },
         ]);
+        setExampleAnswers([]); // Clear example answers at the end
       }
     } else {
-      // Handle general questions & greetings
       const lowerInput = userInput.toLowerCase();
       if (["hello", "hi", "hey"].some((greeting) => lowerInput.startsWith(greeting))) {
         setMessages((prev) => [
@@ -212,9 +210,62 @@ const Chatbot = () => {
       }
       setIsTyping(false);
     }
-  
+
     inputRef.current.focus();
-  };  
+  };
+
+  // New function to handle example answer button clicks
+  const handleExampleAnswerClick = async (answer) => {
+    setMessages((prev) => [...prev, { text: answer, sender: "user" }]);
+    setUserInput("");
+    setExampleAnswers([]); // Clear the buttons after selection
+
+    const nextIndex = questionIndex + 1;
+
+    if (nextIndex === 2) {
+      if (!answer.includes("@")) {
+        setMessages((prev) => [
+          ...prev,
+          { text: "Please provide a valid email address before continuing.", sender: "bot" },
+        ]);
+        return;
+      }
+      setEmail(answer);
+    }
+
+    setAnswers((prev) => ({ ...prev, [questionIndex]: answer }));
+    setIsTyping(true);
+
+    const data = await sendToN8N({
+      questionIndex: nextIndex,
+      answer: answer,
+      email: nextIndex === 2 ? answer : email,
+    });
+
+    if (data.question) {
+      setIsTyping(false);
+      setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
+      setQuestionIndex(nextIndex);
+      if (data.example_answers) setExampleAnswers(data.example_answers);
+      else setExampleAnswers([]);
+    }
+
+    if (data.fixedQuestion) {
+      setIsTyping(false);
+      setFixedMessages((prev) => [...prev, { text: data.fixedQuestion }]);
+    }
+
+    if (data.question && data.question.includes("Fantastic, that should be it!")) {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "In order to generate your report, please review your answers first by clicking 'Review Answers' below.",
+          sender: "bot",
+        },
+      ]);
+    }
+  };
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -226,7 +277,7 @@ const Chatbot = () => {
     localStorage.clear();
     setMessages([
       {
-        text: "Hi, I am an AI Opportunity Audit bot by Balmer Agency - if you answer a few questions for me I can provide an evaluation on your business. This survey should take around 10-15 minutes.",
+        text: "Hi, I am an AI Opportunity Audit bot by Balmer Agency - if you answer a few questions for me I can provide an evaluation on your business.",
         sender: "bot",
       },
     ]);
@@ -235,14 +286,15 @@ const Chatbot = () => {
     setAnswers({});
     setFixedMessages([]);
     setInitialised(false);
-    setConMessage("")
+    setConMessage("");
+    setExampleAnswers([]); // Reset example answers
   };
 
   const handleFirstClose = () => {
     setMessages((prev) => [
       ...prev,
-      { text: "Are you ready to submit your answers?", sender: "bot" },
-      { text: "", sender: "submit_button" }, // Special sender for the button
+      { text: "Are you ready to generate your report?", sender: "bot" },
+      { text: "", sender: "submit_button" },
     ]);
   };
 
@@ -254,15 +306,15 @@ const Chatbot = () => {
       ]);
       return;
     }
-  
-    setIsTyping(true); // Show typing indicator
+
+    setIsTyping(true);
     setTimeout(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-    }, 50); // Small delay to allow DOM update
-  
+    }, 50);
+
     try {
       const data = await sendSubmitToN8N(email);
-      setIsTyping(false); // Hide typing indicator
+      setIsTyping(false);
       if (data.text) {
         setMessages((prev) => [...prev, { text: data.text, sender: "bot" }]);
       } else {
@@ -271,39 +323,39 @@ const Chatbot = () => {
           { text: "Error: No confirmation message received.", sender: "bot" },
         ]);
       }
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }); // Scroll after new message
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
     } catch (error) {
-      setIsTyping(false); // Hide typing indicator on error
+      setIsTyping(false);
       setMessages((prev) => [
         ...prev,
         { text: "Error submitting answers. Please try again.", sender: "bot" },
       ]);
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }); // Scroll after error
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       console.error("Submit error:", error);
     }
   };
 
   return (
     <div className="chat-container">
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
-        <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
       <h1>BALMER AGENCY</h1>
       <p>Artificial intelligence opportunity bot</p>
       <div className="chat-box">
@@ -326,13 +378,31 @@ const Chatbot = () => {
             >
               {msg.sender === "submit_button" ? (
                 <button className="submit_button" onClick={handleSubmit}>
-                  Submit
+                  Generate
                 </button>
               ) : (
                 msg.text
               )}
             </motion.div>
           ))}
+          {exampleAnswers.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="example-answers-container"
+            >
+              <div className="example-answers-label">Suggestions:</div>
+              {exampleAnswers.map((answer, idx) => (
+                <button
+                  key={idx}
+                  className="example-answer-button"
+                  onClick={() => handleExampleAnswerClick(answer)}
+                >
+                  {answer}
+                </button>
+              ))}
+            </motion.div>
+          )}
           {isTyping && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -368,7 +438,7 @@ const Chatbot = () => {
           </button>
           {messages.some((msg) =>
             msg.text.includes(
-              "In order to submit your answers, please review them first by clicking 'Review Answers' below."
+              "In order to generate your report, please review your answers first by clicking 'Review Answers' below."
             )
           ) && (
             <ReviewAnswersPopup
