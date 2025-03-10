@@ -28,8 +28,9 @@
   .popup_title {
     font-size: 24px;
     color: white;
-    margin-bottom: 20px;
-    text-align: center;
+    margin-bottom: 10px;
+    margin-left: -67%;
+    text-align: left;
   }
   
   /* Scrollable questions list */
@@ -39,6 +40,7 @@
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
     padding-right: 10px;
+    margin-left: 2%;
   }
   
   /* Individual question item */

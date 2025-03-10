@@ -11,22 +11,27 @@
     font-family: 'karla';
   }
 
-/* View Report button */
-.view_report_button {
-  background-color: black;
-  color: white;
-  padding: 5px 20px 5px 20px;
-  font-size: 14px;
-  margin-left: 10px;
-  cursor: pointer;
-  border-width: 1px;
-  border-color: white;
-  transition: 0.3s;
-}
-
-.view_report_button:hover {
-  background-color: #ffffff48;
-}
+  .view_report_button {
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Vertically aligns text and image */
+    justify-content: center; /* Centers content */
+    background-color: black;
+    color: white;
+    padding: 5px 20px;
+    font-size: 14px;
+    margin-left: 0.8%;
+    margin-top: 1%;
+    cursor: pointer;
+    border-width: 1px;
+    border-color: white;
+    border-radius: 50px;
+    transition: 0.3s;
+    gap: 20px; /* Adds space between text and arrow */
+  }
+  
+  .view_report_button:hover {
+    background-color: #ffffff48;
+  }
 
 /* Container for example answer buttons */
 .example-answers-container {
@@ -421,6 +426,15 @@
   padding-right: 1.5%;
 }
 
+.chat-container h1 {
+  margin-right: -10%;
+}
+
+.chat-container p {
+  margin-top: 7%;
+  margin-right: 68.5%;
+}
+
 .view_report_button {
   padding: 5px 20px 5px 20px;
   font-size: 12px;
@@ -499,7 +513,7 @@
 
 /* Send button */
 .send-button {
-  padding: 0px 35px;
+  padding: 0px 25px;
   height: 35px;
   margin-right: 2.5%;
   font-size: 12px;
@@ -536,11 +550,13 @@
 .review_answers_button {
   padding: 5px 20px 5px 20px;
   font-size: 12px;
-  margin-left: 10px;
+  margin-left: 26%;
+  margin-top: -5%;
 }
 
 .submit_button {
   font-size: 12px;
+  margin-left: -5%;
 }
 }
 

@@ -20,7 +20,7 @@ const ReportPopup = ({ reportData, onClose }) => {
       {showPopup && (
         <div className="popup_container">
           <div className="popup_box">
-            <h2 className="popup_title">Your AI Opportunity Report</h2>
+            <h2 className="popup_title_report">Your AI Opportunity Report</h2>
 
             <div className="report_content">
               {/* Top row with 4 agent bubbles */}

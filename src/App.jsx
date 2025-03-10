@@ -471,7 +471,7 @@ const Chatbot = () => {
           )}
           {reportData && (
             <button className="view_report_button" onClick={handleViewReport}>
-              View Report
+              View Report<img src="/Group 1.png" alt="Arrow" className="arrow-icon"/>
             </button>
           )}
           {showReportPopup && reportData && (

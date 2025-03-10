@@ -17,17 +17,18 @@
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     width: 90%;
     max-width: 800px; /* Increased for bubble layout */
-    max-height: 80vh;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
   
-  .popup_title {
+  .popup_title_report {
     font-size: 24px;
     color: white;
     margin-bottom: 20px;
-    text-align: center;
+    font-weight: bold;  
+    margin-left: -60%;
   }
   
   .report_content {
@@ -35,25 +36,27 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
   }
   
   /* Agent bubbles container */
   .agent_bubbles {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+    display: grid;
+    width: 30%;
+    grid-template-columns: repeat(2, 1fr);
     margin-bottom: 20px;
+    margin-left: 65%;
+    margin-top: 30%;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 20px;
   }
   
   /* Individual agent bubble */
   .agent_bubble {
-    background: linear-gradient(135deg, #ff4d4d, #ff8c8c); /* Red gradient for low scores */
+    background: rgba(255, 255, 255, 0.263); /* Change to Red gradient for low scores */
     border-radius: 50%;
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -66,15 +69,15 @@
   }
   
   .agent_bubble:nth-child(2) {
-    background: linear-gradient(135deg, #ffcc00, #ffe066); /* Orange for 50-89 */
+    background:rgba(255, 255, 255, 0.263); /* Change dynamically to different colour for 50-89 */
   }
   
   .agent_bubble:nth-child(3) {
-    background: linear-gradient(135deg, #ffcc00, #ffe066); /* Orange for 50-89 */
+    background: rgba(255, 255, 255, 0.263); /* Change dynamically to different colour for 50-89 */
   }
   
   .agent_bubble:nth-child(4) {
-    background: linear-gradient(135deg, #ffcc00, #ffe066); /* Orange for 50-89 */
+    background: rgba(255, 255, 255, 0.263); /* Change dynamically to different colour for 50-89 */
   }
   
   /* Dynamic color based on rating (simplified, adjust as needed) */
@@ -93,15 +96,17 @@
   
   /* Overall rating bubble */
   .overall_bubble {
-    background: linear-gradient(135deg, #ff4d4d, #ff8c8c); /* Red for now, adjust dynamically */
+    background: white;
     border-radius: 50%;
-    width: 150px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
+    margin-top: -63%;
+    margin-left: 62%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: black;
     font-size: 24px;
     text-align: center;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
@@ -125,8 +130,10 @@
     padding: 10px 20px;
     background-color: #1a1a1a;
     border-radius: 8px;
-    margin-top: 20px;
+    margin-top: -28%;
+    margin-left: -40%;
     max-width: 100%;
+    width: 60%;
   }
   
   /* Close button */
