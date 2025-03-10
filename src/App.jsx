@@ -24,7 +24,9 @@ const Chatbot = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [initialised, setInitialised] = useState(false);
   const [conMessage, setConMessage] = useState("");
-  const [exampleAnswers, setExampleAnswers] = useState([]); // New state for example answers
+  const [exampleAnswers, setExampleAnswers] = useState(() =>
+    JSON.parse(localStorage.getItem("exampleAnswers")) || []
+  );
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -42,8 +44,9 @@ const Chatbot = () => {
     localStorage.setItem("userEmail", email);
     localStorage.setItem("answers", JSON.stringify(answers));
     localStorage.setItem("fixedMessages", JSON.stringify(fixedMessages));
+    localStorage.setItem("exampleAnswers", JSON.stringify(exampleAnswers));
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, questionIndex, email, answers, fixedMessages]);
+  }, [messages, questionIndex, email, answers, fixedMessages, exampleAnswers]);
 
   const sendToN8N = async (data) => {
     const response = await fetch(
