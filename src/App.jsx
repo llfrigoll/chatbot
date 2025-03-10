@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import "./App.css";
 import ReviewAnswersPopup from "./ReviewAnswersPopup";
+import ReportPopup from "./ReportPopup"; // New import
 
 const Chatbot = () => {
   const [messages, setMessages] = useState(() =>
@@ -27,10 +28,11 @@ const Chatbot = () => {
   const [exampleAnswers, setExampleAnswers] = useState(() =>
     JSON.parse(localStorage.getItem("exampleAnswers")) || []
   );
+  const [reportData, setReportData] = useState(null); // New state for report data
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  const numOfQuestions = 19;
+  const numOfQuestions = 15; // Updated to match new question count (15)
   const progressPercentage =
     questionIndex > 2 ? Math.round(((questionIndex - 2) / numOfQuestions) * 100) : 0;
 
@@ -138,7 +140,7 @@ const Chatbot = () => {
         setIsTyping(false);
         setQuestionIndex(1);
         setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
-        if (data.example_answers) setExampleAnswers(data.example_answers); // Store example answers
+        if (data.example_answers) setExampleAnswers(data.example_answers);
       }
     } else if (questionIndex !== null) {
       const nextIndex = questionIndex + 1;
@@ -168,8 +170,8 @@ const Chatbot = () => {
         setIsTyping(false);
         setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
         setQuestionIndex(nextIndex);
-        if (data.example_answers) setExampleAnswers(data.example_answers); // Store example answers
-        else setExampleAnswers([]); // Clear if no new example answers
+        if (data.example_answers) setExampleAnswers(data.example_answers);
+        else setExampleAnswers([]);
       }
 
       if (data.fixedQuestion) {
@@ -186,7 +188,7 @@ const Chatbot = () => {
             sender: "bot",
           },
         ]);
-        setExampleAnswers([]); // Clear example answers at the end
+        setExampleAnswers([]);
       }
     } else {
       const lowerInput = userInput.toLowerCase();
@@ -217,11 +219,10 @@ const Chatbot = () => {
     inputRef.current.focus();
   };
 
-  // New function to handle example answer button clicks
   const handleExampleAnswerClick = async (answer) => {
     setMessages((prev) => [...prev, { text: answer, sender: "user" }]);
     setUserInput("");
-    setExampleAnswers([]); // Clear the buttons after selection
+    setExampleAnswers([]);
 
     const nextIndex = questionIndex + 1;
 
@@ -290,7 +291,8 @@ const Chatbot = () => {
     setFixedMessages([]);
     setInitialised(false);
     setConMessage("");
-    setExampleAnswers([]); // Reset example answers
+    setExampleAnswers([]);
+    setReportData(null); // Reset report data
   };
 
   const handleFirstClose = () => {
@@ -318,12 +320,16 @@ const Chatbot = () => {
     try {
       const data = await sendSubmitToN8N(email);
       setIsTyping(false);
-      if (data.text) {
-        setMessages((prev) => [...prev, { text: data.text, sender: "bot" }]);
+      if (data.result && Array.isArray(data.result)) {
+        setReportData(data.result); // Store the report data for the popup
+        setMessages((prev) => [
+          ...prev,
+          { text: "Your report is ready! Check it out in the popup.", sender: "bot" },
+        ]);
       } else {
         setMessages((prev) => [
           ...prev,
-          { text: "Error: No confirmation message received.", sender: "bot" },
+          { text: "Error: Invalid report format received.", sender: "bot" },
         ]);
       }
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -454,6 +460,7 @@ const Chatbot = () => {
               onFirstClose={handleFirstClose}
             />
           )}
+          {reportData && <ReportPopup reportData={reportData} onClose={() => setReportData(null)} />}
         </div>
       </div>
     </div>
