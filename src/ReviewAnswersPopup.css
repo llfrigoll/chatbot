@@ -8,15 +8,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
   }
   
   /* Popup box */
   .popup_box {
-    background-color: white;
+    background-color: black;
     padding: 20px;
-    border-radius: 10px;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     width: 90%;
     max-width: 600px;
@@ -28,7 +27,7 @@
   /* Popup title */
   .popup_title {
     font-size: 24px;
-    color: #2faeb6;
+    color: white;
     margin-bottom: 20px;
     text-align: center;
   }
@@ -38,7 +37,7 @@
     flex: 1;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: rgba(47, 174, 182, 0.5) transparent;
+    scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
     padding-right: 10px;
   }
   
@@ -50,7 +49,7 @@
   /* Question text */
   .question_text {
     font-size: 14px;
-    color: #333;
+    color: #ffffffb8;
     margin-bottom: 8px;
     word-wrap: break-word;
   }
@@ -67,7 +66,6 @@
     flex: 1;
     padding: 8px 12px;
     border: 1px solid #e5e7eb;
-    border-radius: 8px;
     font-size: 14px;
     background-color: #f9f9f9;
     color: #333;
@@ -75,13 +73,13 @@
   
   .answer_input:focus {
     outline: none;
-    border-color: #2faeb6;
-    box-shadow: 0 0 0 2px rgba(51, 84, 255, 0.2);
+    border-color: lightgray;
+    box-shadow: 0 0 0 1px rgba(51, 84, 255, 0.2);
   }
   
   /* Save button (appears when answer is changed) */
   .save_button {
-    background-color: #2faeb6;
+    background-color: black;
     color: white;
     border: none;
     padding: 6px 16px;
@@ -96,18 +94,19 @@
   
   /* Close button */
   .close_button {
-    background-color: #f27472;
+    background-color: black;
     color: white;
-    border: none;
+    border-width: 1px;
+    border-color: white;
     padding: 10px;
-    border-radius: 50px;
     font-size: 14px;
     margin-top: 20px;
     cursor: pointer;
+    transition: 0.3s;
   }
 
   .close_button:hover {
-    background-color: #ea5b59;
+    background-color: #ffffff48;
   }
     
   /* Responsive adjustments */

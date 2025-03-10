@@ -279,25 +279,23 @@
   }
 
   .restart_button:hover {
-    background-color: #f2f2f2;
-    color: #f27472;
+    background-color: #ffffff48;
   }
 
   .review_answers_button {
-    background-color: #2faeb6;
+    background-color: black;
     color: white;
     padding: 5px 20px 5px 20px;
     font-size: 14px;
     margin-left: 10px;
     cursor: pointer;
     border-width: 1px;
-    border-color: #2faeb6;
+    border-color: white;
     transition: 0.3s;
   }
 
   .review_answers_button:hover {
-    background-color: white;
-    color: #2faeb6;
+    background-color: #ffffff48;
   }
 
   .typing-indicator {
@@ -337,22 +335,24 @@
 .submit-button-container {
   align-self: flex-start; /* Aligns with bot messages */
   padding: 0; /* Remove padding to avoid extra space */
-  background: none; /* No background for the container */
+  background: none;
 }
 
 /* Submit button styling */
 .submit_button {
-  background-color: #2faeb6;
+  background-color: black;
+  border-width: 1px;
+  border-color: white;
+  transition: 0.3s;
   color: white;
-  border: none;
-  padding: 8px 20px;
+  padding: 6px 20px;
   font-size: 14px;
   cursor: pointer;
-  margin: 10px 0 0 0; /* Small margin to separate from the message */
+  margin-left: -10%;
 }
 
 .submit_button:hover {
-  background-color: #13a6b0;
+  background-color: #ffffff48;
 }
 
 .submit-button-container::after {
@@ -440,7 +440,7 @@
 
 /* Send button */
 .send-button {
-  padding: 10px 35px;
+  padding: 0px 35px;
   height: 35px;
   margin-right: 2.5%;
   font-size: 12px;
@@ -448,7 +448,7 @@
 }
 
 .send-button:hover {
-  background-color: #2faeb6;
+  background-color: #ffffff48;
 }
 
 .chat-container h1 {
@@ -478,6 +478,10 @@
   padding: 5px 20px 5px 20px;
   font-size: 12px;
   margin-left: 10px;
+}
+
+.submit_button {
+  font-size: 12px;
 }
 }
 
