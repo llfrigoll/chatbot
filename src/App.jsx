@@ -375,7 +375,7 @@ const Chatbot = () => {
       <div className="particle"></div>
       <div className="particle"></div>
       <h1>BALMER AGENCY</h1>
-      <p>Artificial intelligence opportunity bot</p>
+      <p>AI Business Acceleration Bot</p>
       <div className="chat-box">
         <div className="progress-bar-container">
           <div className="progress-bar" style={{ width: `${progressPercentage}%` }} />
@@ -396,7 +396,7 @@ const Chatbot = () => {
             >
               {msg.sender === "submit_button" ? (
                 <button className="submit_button" onClick={handleSubmit}>
-                  Generate
+                  GENERATE<img src="/Group 1.png" alt="Arrow" className="arrow-icon"/>
                 </button>
               ) : (
                 msg.text
@@ -447,12 +447,12 @@ const Chatbot = () => {
             placeholder="Type here..."
           />
           <button className="send-button" onClick={handleSend}>
-            Send
+            SEND<img src="/Group 1.png" alt="Arrow" className="arrow-icon"/>
           </button>
         </div>
         <div className="restart_button_container">
           <button className="restart_button" onClick={restartChat}>
-            Restart
+            Restart<img src="/Group 2.png" alt="Arrow" className="arrow-icon2"/>
           </button>
           {messages.some((msg) =>
             msg.text.includes(

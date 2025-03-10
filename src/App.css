@@ -52,12 +52,12 @@
 
 /* Styling for example answer buttons */
 .example-answer-button {
-  background-color: black; /* Matches send button color */
+  background-color: transparent;
   color: white;
   border-width: 1px;
   border-color: white;
   padding: 8px 16px;
-  border-radius: 10px;
+  border-radius: 10px 10px 0px 10px;
   font-size: 14px;
   cursor: pointer;
   transition: scale 0.3s;
@@ -66,6 +66,7 @@
 
 .example-answer-button:hover {
   scale: 1.05;
+  background-color: #ffffff48;
 }
 
 /* Particle styles */
@@ -140,12 +141,14 @@
 
 /* Progress bar container */
 .progress-bar-container {
-  width: 95%;                  /* Fill most of the chat box width */
+  width: 95%; 
   height: 8px;                /* Thin horizontal bar */
   background-color: rgba(255, 255, 255, 0.10);
-  margin-left: 2.4%;
+  margin-left: 2%;
   overflow: hidden;            /* Ensures bar corners remain rounded */
   position: relative;
+  margin-bottom: 2%;
+  margin-top: -2.5%;
 }
 
 /* Actual progress fill */
@@ -230,6 +233,7 @@
   .input-container {
     margin-top: 60%;
     margin-bottom: 3%;
+    margin-left: 1%;
     display: flex;
     padding-left: 0px;
   }
@@ -241,25 +245,38 @@
     padding: 10px 5px 10px 20px;
     margin-right: 10px;
     font-size: 14px;
+    border-radius: 50px;
   }
   
-  /* Send button */
   .send-button {
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Vertically aligns text and image */
+    justify-content: center; /* Centers content */
     color: white;
+    margin-top: 5px;
+    background-color: black;
     border-width: 1px;
     border-color: white;
-    padding: 10px 10px;
-    margin-right: 20px;
+    border-radius: 50px;
+    padding: 10px 20px; /* More balanced padding */
     cursor: pointer;
     font-size: 14px;
     transition: 0.3s;
+    gap: 25px; /* Adds space between text and arrow */
+    margin-right: 20px;
   }
   
   .send-button:hover {
-    background-color: black;
+    background-color: #ffffff48;
     border-width: 1px;
   }
   
+  .arrow-icon {
+    height: 12px;
+    margin: 0; /* Resets unnecessary margins */
+    width: 40px;
+  }  
+
   .chat-container h1 {
     font-size: 50px;
     font-weight: bold;
@@ -273,7 +290,7 @@
   .chat-container p {
     display: block;
     margin-left: 0%;
-    margin-right: 79.5%;
+    margin-right: 83.5%;
     margin-top: 5.5%;
     color: white;
     font-weight: lighter;
@@ -285,35 +302,51 @@
   }
 
   .restart_button {
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Vertically aligns text and image */
+    justify-content: center; /* Centers content */
     background-color: black;
     color: white;
-    padding: 5px 20px 5px 20px;
+    padding: 7px 20px;
     font-size: 14px;
     cursor: pointer;
     border-width: 1px;
     border-color: white;
     transition: 0.3s;
+    gap: 15px; /* Adds space between text and arrow */
+    margin-left: 1%;
   }
-
+  
   .restart_button:hover {
     background-color: #ffffff48;
   }
+  
+  .arrow-icon2 {
+    height: 12px;
+    width: 35px;
+    margin: 0; /* Resets unnecessary margins */
+  }  
 
   .review_answers_button {
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Vertically aligns text and image */
+    justify-content: center; /* Centers content */
     background-color: black;
     color: white;
-    padding: 5px 20px 5px 20px;
+    padding: 7px 20px;
     font-size: 14px;
-    margin-left: 10px;
+    margin-left: 16.5%;
+    margin-top: -3.8%;
     cursor: pointer;
     border-width: 1px;
     border-color: white;
     transition: 0.3s;
+    gap: 20px; /* Adds space between text and arrow */
   }
-
+  
   .review_answers_button:hover {
     background-color: #ffffff48;
-  }
+  }  
 
   .typing-indicator {
     display: flex;
@@ -355,17 +388,20 @@
   background: none;
 }
 
-/* Submit button styling */
 .submit_button {
+  display: flex; /* Enables flexbox */
+  align-items: center; /* Vertically aligns text and image */
+  justify-content: center; /* Centers content */
   background-color: black;
-  border-width: 1px;
-  border-color: white;
-  transition: 0.3s;
   color: white;
   padding: 6px 20px;
   font-size: 14px;
   cursor: pointer;
-  margin-left: -10%;
+  border-width: 1px;
+  border-color: white;
+  border-radius: 50px;
+  transition: 0.3s;
+  gap: 25px; /* Adds space between text and arrow */
 }
 
 .submit_button:hover {

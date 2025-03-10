@@ -113,7 +113,7 @@ const ReviewAnswersPopup = ({ answers, email, updateEmail, updateAnswers, fixedM
         className="review_answers_button"
         onClick={() => setShowPopup(true)}
       >
-        Review Answers
+        Review Answers<img src="/Group 2.png" alt="Arrow" className="arrow-icon2"/>
       </button>
 
       {showPopup && (
