@@ -11,6 +11,23 @@
     font-family: 'karla';
   }
 
+/* View Report button */
+.view_report_button {
+  background-color: black;
+  color: white;
+  padding: 5px 20px 5px 20px;
+  font-size: 14px;
+  margin-left: 10px;
+  cursor: pointer;
+  border-width: 1px;
+  border-color: white;
+  transition: 0.3s;
+}
+
+.view_report_button:hover {
+  background-color: #ffffff48;
+}
+
 /* Container for example answer buttons */
 .example-answers-container {
   align-self: flex-end;
@@ -368,6 +385,12 @@
   padding-right: 1.5%;
 }
 
+.view_report_button {
+  padding: 5px 20px 5px 20px;
+  font-size: 12px;
+  margin-left: 10px;
+}
+
 .example-answers-container {
   margin-right: 1%;
 }
@@ -494,6 +517,13 @@
   padding-right: 1.5%;
 }
 
+.view_report_button {
+  padding: 5px 20px 5px 20px;
+  border-radius: 50px;
+  font-size: 10px;
+  margin-left: 10px;
+}
+
 .example-answers-container {
   margin-right: 5%;
 }
@@ -601,3 +631,4 @@
   font-size: 12px;
 }
 }
+

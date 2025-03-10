@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import "./App.css";
 import ReviewAnswersPopup from "./ReviewAnswersPopup";
-import ReportPopup from "./ReportPopup"; // New import
+import ReportPopup from "./ReportPopup";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState(() =>
@@ -28,11 +28,12 @@ const Chatbot = () => {
   const [exampleAnswers, setExampleAnswers] = useState(() =>
     JSON.parse(localStorage.getItem("exampleAnswers")) || []
   );
-  const [reportData, setReportData] = useState(null); // New state for report data
+  const [reportData, setReportData] = useState(() => JSON.parse(localStorage.getItem("reportData")) || null);
+  const [showReportPopup, setShowReportPopup] = useState(false); // New state to toggle popup
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  const numOfQuestions = 15; // Updated to match new question count (15)
+  const numOfQuestions = 15;
   const progressPercentage =
     questionIndex > 2 ? Math.round(((questionIndex - 2) / numOfQuestions) * 100) : 0;
 
@@ -47,8 +48,9 @@ const Chatbot = () => {
     localStorage.setItem("answers", JSON.stringify(answers));
     localStorage.setItem("fixedMessages", JSON.stringify(fixedMessages));
     localStorage.setItem("exampleAnswers", JSON.stringify(exampleAnswers));
+    localStorage.setItem("reportData", JSON.stringify(reportData));
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, questionIndex, email, answers, fixedMessages, exampleAnswers]);
+  }, [messages, questionIndex, email, answers, fixedMessages, exampleAnswers, reportData]);
 
   const sendToN8N = async (data) => {
     const response = await fetch(
@@ -292,7 +294,8 @@ const Chatbot = () => {
     setInitialised(false);
     setConMessage("");
     setExampleAnswers([]);
-    setReportData(null); // Reset report data
+    setReportData(null);
+    setShowReportPopup(false);
   };
 
   const handleFirstClose = () => {
@@ -321,10 +324,10 @@ const Chatbot = () => {
       const data = await sendSubmitToN8N(email);
       setIsTyping(false);
       if (data.result && Array.isArray(data.result)) {
-        setReportData(data.result); // Store the report data for the popup
+        setReportData(data.result); // Set the report data but don't show popup
         setMessages((prev) => [
           ...prev,
-          { text: "Your report is ready! Check it out in the popup.", sender: "bot" },
+          { text: "Your report is ready! Click 'View Report' to see it.", sender: "bot" },
         ]);
       } else {
         setMessages((prev) => [
@@ -341,6 +344,12 @@ const Chatbot = () => {
       ]);
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       console.error("Submit error:", error);
+    }
+  };
+
+  const handleViewReport = () => {
+    if (reportData) {
+      setShowReportPopup(true); // Show the popup
     }
   };
 
@@ -460,7 +469,14 @@ const Chatbot = () => {
               onFirstClose={handleFirstClose}
             />
           )}
-          {reportData && <ReportPopup reportData={reportData} onClose={() => setReportData(null)} />}
+          {reportData && (
+            <button className="view_report_button" onClick={handleViewReport}>
+              View Report
+            </button>
+          )}
+          {showReportPopup && reportData && (
+            <ReportPopup reportData={reportData} onClose={() => setShowReportPopup(false)} />
+          )}
         </div>
       </div>
     </div>
