@@ -1,15 +1,109 @@
 /* Main container */
 .chat-container {
-    background-color: #000000;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: right;
-    overflow: hidden;
-    padding-right: 1.5%;
-    font-family: 'karla';
+  background: linear-gradient(270deg, #000000 0%, #1a1a1a 180%);
+  background-size: cover;      /* or contain, or specific size */
+  background-position: center; /* or top, bottom, etc. */
+  background-repeat: no-repeat; /* or repeat, repeat-x, repeat-y */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: right;
+  overflow: hidden;
+  padding-right: 1.5%;
+  font-family: 'karla';
+  position: relative; /* Needed for positioning glow effect */
+  transition: box-shadow 0.3s ease; /* Smooth transition for glow */
+  box-shadow: 
+      0 0 var(--glow-intensity, 0px) rgba(255, 255, 255, 0.1), /* Outer glow */
+      inset 0 0 var(--glow-intensity, 0px) rgba(255, 255, 255, 0.05); /* Inner glow */
+}
+
+.background-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  grid-template-rows: auto auto; /* Two rows */
+  gap: 1px 0; /* Vertical gap only, no horizontal gap between columns */
+  max-width: 68%;
+  margin: 20px auto;
+  margin-left: 2%;
+}
+
+/* Style all images */
+.background-image {
+  width: 100%; /* Default to fill grid cell */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Ensure images cover their area */
+}
+
+/* First image: Top left */
+.background-grid img:nth-child(1) {
+  grid-column: 1 / 2; /* First column */
+  grid-row: 1 / 2; /* First row */
+  margin-right: 2px; /* Space to the right of the first image */
+  width: 54%; /* Adjustable width */
+  height: auto; /* Adjustable height */
+}
+
+/* Second image: Top right */
+.background-grid img:nth-child(2) {
+  grid-column: 2 / 3; /* Second column */
+  grid-row: 1 / 2; /* First row */
+  margin-left: -42%; /* Space to the left of the second image */
+  width: 35%; /* Adjustable width */
+  height: 90%; /* Adjustable height */
+}
+
+/* Third image: Bottom left */
+.background-grid img:nth-child(3) {
+  grid-column: 1 / 2; /* First column (left side) */
+  grid-row: 2 / 3; /* Second row (bottom) */
+  margin-left: 0; /* Reset margin-left since it’s on the left side now */
+  margin-top: -18%; /* Keep vertical adjustment if desired */
+  width: 53%; /* Adjustable width */
+  height: 100%; /* Adjustable height */
+}
+
+/* Center the container and fix its position */
+.circle-text {
+  position: absolute; /* Fixed position */
+  top: 50%; /* Your custom vertical position */
+  left: 22%; /* Your custom horizontal position */
+  transform: translate(-50%, -50%); /* Center it precisely */
+  width: 60px; /* Matches 2 * radius */
+  height: 60px; /* Matches 2 * radius */
+}
+
+/* Style the container for the text and apply rotation */
+.circle-text .text {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  color: #ffffff;
+  animation: rotate 60s linear infinite; /* Moved animation here */
+}
+
+/* Position each character in a circle */
+.circle-text .text span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 30px; /* Matches the radius */
+  transform-origin: 0 30px; /* Matches the radius */
+}
+
+/* Animation for slow rotation */
+/* @keyframes rotate {
+  from {
+    transform: rotate(0deg);
   }
+  to {
+    transform: rotate(360deg);
+  }
+} */
 
   .view_report_button {
     display: flex; /* Enables flexbox */
@@ -58,20 +152,20 @@
 /* Styling for example answer buttons */
 .example-answer-button {
   background-color: transparent;
-  color: white;
+  color: rgb(235, 233, 233);
   border-width: 1px;
-  border-color: white;
+  border-color: rgba(255, 255, 255, 0.3);
   padding: 8px 16px;
   border-radius: 10px 10px 0px 10px;
   font-size: 14px;
   cursor: pointer;
-  transition: scale 0.3s;
+  transition: 0.3s;
   text-align: center;
 }
 
 .example-answer-button:hover {
   scale: 1.05;
-  background-color: #ffffff48;
+  background-color: #ffffff20;
 }
 
 /* Particle styles */
@@ -128,29 +222,147 @@
   }
 }
 
-  /* Chat box container */
+/* Base chat box style - unchanged */
 .chat-box {
-    position: relative; /* Needed for absolute positioning of the lines */
-    width: 100%;
-    height: 100vh;
-    max-height: 93%;
-    max-width: 65%;
-    margin-top: -5.5%;
-    display: flex;
-    flex-direction: column;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    padding: 50px 0px 1% 20px;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  max-height: 93%;
+  max-width: 65%;
+  margin-top: -42.5%;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  padding: 50px 0px 1% 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* Glow effect main layer - unchanged */
+.chat-box.glow-active::before {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  border-radius: inherit; /* Ensures glow follows rounded edges */
+}
+
+/* Straight edges - unchanged */
+.chat-box[data-glow-border="top"]::before,
+.chat-box[data-glow-border="bottom"]::before {
+  width: 15%;
+  height: 2px;
+  background: radial-gradient(circle, 
+    rgba(255, 255, 255, 0.60), 
+    rgba(88, 88, 88, 0.3) 50%, 
+    rgba(0, 255, 255, 0) 100%);
+  position: absolute;
+  left: calc(var(--glow-position) * 100% - 7%);
+}
+
+.chat-box[data-glow-border="top"]::before {
+  top: 0;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.chat-box[data-glow-border="bottom"]::before {
+  bottom: 0;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.chat-box[data-glow-border="left"]::before,
+.chat-box[data-glow-border="right"]::before {
+  width: 2px;
+  height: 15%;
+  background: radial-gradient(circle, 
+    rgba(255, 255, 255, 0.6), 
+    rgba(88, 88, 88, 0.3) 50%, 
+    rgba(0, 255, 255, 0) 100%);
+  position: absolute;
+  top: calc(var(--glow-position) * 100% - 7%);
+}
+
+.chat-box[data-glow-border="left"]::before {
+  left: 0;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.chat-box[data-glow-border="right"]::before {
+  right: 0;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+/* Adjusted corner glow effect with smooth transition */
+.chat-box[data-glow-border="top-left"]::after,
+.chat-box[data-glow-border="top-right"]::after,
+.chat-box[data-glow-border="bottom-left"]::after,
+.chat-box[data-glow-border="bottom-right"]::after {
+  content: '';
+  position: absolute;
+  width: 20px; /* Larger to cover the curve */
+  height: 20px; /* Larger to cover the curve */
+  background: radial-gradient(circle at center, 
+    rgba(255, 255, 255, 0.6), 
+    rgba(88, 88, 88, 0.3) 50%, 
+    rgba(0, 255, 255, 0) 100%);
+  z-index: 2;
+}
+
+/* Position corners to align with the border curve */
+.chat-box[data-glow-border="top-left"]::after {
+  top: -10px; /* Shift outside to follow curve */
+  left: -10px;
+  clip-path: polygon(0 0, 100% 0, 0 100%); /* Clip to quarter-circle */
+  border-radius: 20px 0 0 0; /* Match top-left curve */
+}
+
+.chat-box[data-glow-border="top-right"]::after {
+  top: -10px;
+  right: -10px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%); /* Clip to quarter-circle */
+  border-radius: 0 20px 0 0; /* Match top-right curve */
+}
+
+.chat-box[data-glow-border="bottom-left"]::after {
+  bottom: -10px;
+  left: -10px;
+  clip-path: polygon(0 0, 100% 100%, 0 100%); /* Clip to quarter-circle */
+  border-radius: 0 0 0 20px; /* Match bottom-left curve */
+}
+
+.chat-box[data-glow-border="bottom-right"]::after {
+  bottom: -10px;
+  right: -10px;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%); /* Clip to quarter-circle */
+  border-radius: 0 0 20px 0; /* Match bottom-right curve */
+}
+
+/* Glow Animation - unchanged */
+@keyframes glowPulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.chat-box.glow-active::before,
+.chat-box.glow-active::after {
+  animation: glowPulse 2.5s infinite ease-in-out;
 }
 
 /* Progress bar container */
 .progress-bar-container {
-  width: 95%; 
-  height: 8px;                /* Thin horizontal bar */
+  width: 94%; 
+  height: 8px; /* Thin horizontal bar */
   background-color: rgba(255, 255, 255, 0.10);
   margin-left: 2%;
-  overflow: hidden;            /* Ensures bar corners remain rounded */
+  overflow: hidden; /* Ensures bar corners remain rounded */
   position: relative;
   margin-bottom: 2%;
   margin-top: -2.5%;
@@ -159,7 +371,8 @@
 /* Actual progress fill */
 .progress-bar {
   height: 100%;
-  background-color: white;
+  background: white;
+  filter: drop-shadow(20px 0px 5px rgba(255, 255, 255, 1));
   transition: width 0.4s ease; /* Smooth fill animation */
 }
 
@@ -203,79 +416,92 @@
   
   /* Bot messages */
   .bot-message {
-    background-color: white;
-    color: black;
+    background-color: rgb(48, 48, 48);
+    background: linear-gradient(45deg, rgba(10, 10, 10, 0.2), rgba(48, 48, 48, 0.4));
+    color: rgb(232, 230, 230);
     align-self: flex-start;
     border-radius: 10px 10px 10px 0px;
     padding: 10px 20px 10px 20px;
+    margin-left: -5px;
   }
   
   /* User messages */
-  .user-message {
-    background-color: black;
-    color: white;
+.user-message {
+    background-color: rgba(255, 255, 255, 0.1);
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(48, 48, 48, 0.4));
+    color: rgb(232, 230, 230);
     align-self: flex-end;
     margin-right: 30px;
     border-radius: 10px 10px 0px 10px;
     padding: 10px 21px 10px 21px;
     position: relative;
-  }
-  
-/* Create a cover layer */
-.user-message::after {
-  content: "";
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: black; /* Match the user message background */
-  z-index: 1; /* Ensure it's above the message lines */
 }
 
   /* Input area */
   .input-container {
+    position: relative;
     margin-top: 60%;
     margin-bottom: 3%;
     margin-left: 1%;
     display: flex;
     padding-left: 0px;
   }
-  
+
   /* Input field */
   .input-box {
-    background-color: white;
+    background-color: rgb(48, 48, 48);
     flex: 1;
     padding: 10px 5px 10px 20px;
-    margin-right: 10px;
+    margin-right: 4%;
     font-size: 14px;
-    border-radius: 50px;
+    border-radius: 15px;
+    color: rgb(232, 230, 230);
+    border: 1px solid rgb(48, 48, 48); /* Match the background initially */
+    transition: border-color 0.3s, background-color 0.3s; /* Specify properties to transition */
+  }
+  .input-box:hover {
+    background-color: rgb(55, 55, 55);
   }
   
+  /* Focus state (when clicked) */
+  .input-box:focus {
+    outline: none; /* Removes default browser outline */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Replace with your desired color */
+    background-color: rgb(55, 55, 55);
+  }
+
   .send-button {
-    display: flex; /* Enables flexbox */
-    align-items: center; /* Vertically aligns text and image */
-    justify-content: center; /* Centers content */
+    position: absolute;
+    right: 3.5%;        /* Distance from the right edge */
+    top: 50%;           /* Vertically center */
+    transform: translateY(-50%); /* Adjust for vertical centering */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
-    margin-top: 5px;
-    background-color: black;
-    border-width: 1px;
-    border-color: white;
-    border-radius: 50px;
-    padding: 10px 20px; /* More balanced padding */
+    padding: 10px 20px;
     cursor: pointer;
     font-size: 14px;
-    transition: 0.3s;
-    gap: 25px; /* Adds space between text and arrow */
-    margin-right: 20px;
-  }
-  
-  .send-button:hover {
-    background-color: #ffffff48;
-    border-width: 1px;
-  }
-  
+    transition: 0.3s; /* Applies to background-color */
+    gap: 25px;
+    margin-right: 5px;
+}
+
+.send-button svg {
+    width: 16px;
+    height: 16px;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5)); /* Subtle default glow */
+    transition: filter 0.3s; /* Smooth transition for glow */
+}
+
+.send-button:hover {
+    background-color: transparent;
+}
+
+.send-button:hover svg {
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 1)); /* Stronger glow on hover */
+}
+
   .arrow-icon {
     height: 12px;
     margin: 0; /* Resets unnecessary margins */
@@ -310,20 +536,22 @@
     display: flex; /* Enables flexbox */
     align-items: center; /* Vertically aligns text and image */
     justify-content: center; /* Centers content */
-    background-color: black;
-    color: white;
+    background-color: transparent;
+    color: rgb(235, 233, 233);
     padding: 7px 20px;
     font-size: 14px;
     cursor: pointer;
+    font-weight: bold;
     border-width: 1px;
-    border-color: white;
+    border-color: rgba(255, 255, 255, 0.3);
     transition: 0.3s;
     gap: 15px; /* Adds space between text and arrow */
     margin-left: 1%;
+    border-radius: 50px;
   }
   
   .restart_button:hover {
-    background-color: #ffffff48;
+    background-color: #ffffff20;
   }
   
   .arrow-icon2 {
@@ -336,21 +564,21 @@
     display: flex; /* Enables flexbox */
     align-items: center; /* Vertically aligns text and image */
     justify-content: center; /* Centers content */
-    background-color: black;
+    background-color: transparent;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.3);
     color: white;
     padding: 7px 20px;
     font-size: 14px;
-    margin-left: 16.5%;
+    margin-left: 17%;
     margin-top: -3.8%;
     cursor: pointer;
-    border-width: 1px;
-    border-color: white;
     transition: 0.3s;
     gap: 20px; /* Adds space between text and arrow */
   }
   
   .review_answers_button:hover {
-    background-color: #ffffff48;
+    background-color: #ffffff20;
   }  
 
   .typing-indicator {
@@ -397,13 +625,13 @@
   display: flex; /* Enables flexbox */
   align-items: center; /* Vertically aligns text and image */
   justify-content: center; /* Centers content */
-  background-color: black;
+  background-color: transparent;
   color: white;
   padding: 6px 20px;
   font-size: 14px;
   cursor: pointer;
   border-width: 1px;
-  border-color: white;
+  border-color: rgba(255, 255, 255, 0.3);
   border-radius: 50px;
   transition: 0.3s;
   gap: 25px; /* Adds space between text and arrow */

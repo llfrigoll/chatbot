@@ -29,9 +29,18 @@ const Chatbot = () => {
     JSON.parse(localStorage.getItem("exampleAnswers")) || []
   );
   const [reportData, setReportData] = useState(() => JSON.parse(localStorage.getItem("reportData")) || null);
-  const [showReportPopup, setShowReportPopup] = useState(false); // New state to toggle popup
+  const [showReportPopup, setShowReportPopup] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [borderGlowData, setBorderGlowData] = useState({
+    isActive: false,
+    border: null,
+    position: 0,
+  });
+
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const chatBoxRef = useRef(null);
+  const circleTextRef = useRef(null);
 
   const numOfQuestions = 15;
   const progressPercentage =
@@ -51,6 +60,80 @@ const Chatbot = () => {
     localStorage.setItem("reportData", JSON.stringify(reportData));
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, questionIndex, email, answers, fixedMessages, exampleAnswers, reportData]);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!chatBoxRef.current) return;
+
+      const box = chatBoxRef.current.getBoundingClientRect();
+      const x = e.clientX - box.left;
+      const y = e.clientY - box.top;
+
+      setMousePosition({ x, y });
+
+      const distToLeft = x;
+      const distToRight = box.width - x;
+      const distToTop = y;
+      const distToBottom = box.height - y;
+
+      const minDist = Math.min(distToLeft, distToRight, distToTop, distToBottom);
+      const borderThreshold = 50;
+
+      if (minDist < borderThreshold) {
+        let closestBorder;
+        let relativePosition;
+
+        if (minDist === distToLeft) {
+          closestBorder = "left";
+          relativePosition = y / box.height;
+        } else if (minDist === distToRight) {
+          closestBorder = "right";
+          relativePosition = y / box.height;
+        } else if (minDist === distToTop) {
+          closestBorder = "top";
+          relativePosition = x / box.width;
+        } else {
+          closestBorder = "bottom";
+          relativePosition = x / box.width;
+        }
+
+        setBorderGlowData({
+          isActive: true,
+          border: closestBorder,
+          position: relativePosition,
+        });
+      } else {
+        setBorderGlowData({
+          isActive: false,
+          border: null,
+          position: 0,
+        });
+      }
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    return () => document.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    const textElement = circleTextRef.current;
+    if (!textElement) return;
+
+    const text = textElement.textContent || "ROTATING CIRCLE TEXT";
+    const characters = text.split("");
+    const radius = 30; // Smaller fixed radius to reduce space between characters
+    const angleIncrement = 360 / characters.length;
+
+    textElement.innerHTML = "";
+
+    characters.forEach((char, index) => {
+      const span = document.createElement("span");
+      span.textContent = char === " " ? "\u00A0" : char;
+      const angle = angleIncrement * index;
+      span.style.transform = `rotate(${angle}deg) translate(0, -${radius}px)`;
+      textElement.appendChild(span);
+    });
+  }, []);
 
   const sendToN8N = async (data) => {
     const response = await fetch(
@@ -324,7 +407,7 @@ const Chatbot = () => {
       const data = await sendSubmitToN8N(email);
       setIsTyping(false);
       if (data.result && Array.isArray(data.result)) {
-        setReportData(data.result); // Set the report data but don't show popup
+        setReportData(data.result);
         setMessages((prev) => [
           ...prev,
           { text: "Your report is ready! Click 'View Report' to see it.", sender: "bot" },
@@ -349,7 +432,7 @@ const Chatbot = () => {
 
   const handleViewReport = () => {
     if (reportData) {
-      setShowReportPopup(true); // Show the popup
+      setShowReportPopup(true);
     }
   };
 
@@ -376,7 +459,27 @@ const Chatbot = () => {
       <div className="particle"></div>
       <h1>BALMER AGENCY</h1>
       <p>AI Business Acceleration Bot</p>
-      <div className="chat-box">
+      <div className="background-grid">
+        <img src="/balmer_background.jpg" alt="Background 1" className="background-image large-image" />
+        <img src="/balmer_background2.jpg" alt="Background 2" className="background-image small-image" />
+        <img src="/balmer_background3.jpg" alt="Background 3" className="background-image small-image" />
+      </div>
+      <div className="circle-text">
+        <span className="text" ref={circleTextRef}>
+          BALMERAGENCY
+        </span>
+      </div>
+      <div
+        className={`chat-box ${borderGlowData.isActive ? "glow-active" : ""}`}
+        ref={chatBoxRef}
+        style={{
+          "--mouse-x": `${mousePosition.x}px`,
+          "--mouse-y": `${mousePosition.y}px`,
+          "--glow-position": borderGlowData.position,
+          "--glow-border": borderGlowData.border,
+        }}
+        data-glow-border={borderGlowData.border}
+      >
         <div className="progress-bar-container">
           <div className="progress-bar" style={{ width: `${progressPercentage}%` }} />
         </div>
@@ -396,7 +499,7 @@ const Chatbot = () => {
             >
               {msg.sender === "submit_button" ? (
                 <button className="submit_button" onClick={handleSubmit}>
-                  GENERATE<img src="/Group 1.png" alt="Arrow" className="arrow-icon"/>
+                  GENERATE<img src="/Group 1.png" alt="Arrow" className="arrow-icon" />
                 </button>
               ) : (
                 msg.text
@@ -447,12 +550,14 @@ const Chatbot = () => {
             placeholder="Type here..."
           />
           <button className="send-button" onClick={handleSend}>
-            SEND<img src="/Group 1.png" alt="Arrow" className="arrow-icon"/>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+              <path d="M2 12L22 2L12 22L2 12Z" />
+            </svg>
           </button>
         </div>
         <div className="restart_button_container">
           <button className="restart_button" onClick={restartChat}>
-            Restart<img src="/Group 2.png" alt="Arrow" className="arrow-icon2"/>
+            RESTART<img src="/Group 2.png" alt="Arrow" className="arrow-icon2" />
           </button>
           {messages.some((msg) =>
             msg.text.includes(
@@ -471,7 +576,7 @@ const Chatbot = () => {
           )}
           {reportData && (
             <button className="view_report_button" onClick={handleViewReport}>
-              View Report<img src="/Group 1.png" alt="Arrow" className="arrow-icon"/>
+              View Report<img src="/Group 1.png" alt="Arrow" className="arrow-icon" />
             </button>
           )}
           {showReportPopup && reportData && (
