@@ -146,7 +146,7 @@ const ReviewAnswersPopup = ({ answers, email, updateEmail, updateAnswers, fixedM
                   </div>
 
 
-              {fixedMessages.slice(1).map((question, index) => {
+              {fixedMessages.filter((_, index) => index + 1 !== fixedMessages.length).map((question, index) => {
                 const questionIndex = index + 2; // Adjust for offset
                 const answer = editedAnswers[questionIndex] || "";
                 const isChanged = changedQuestions[questionIndex];

@@ -24,7 +24,6 @@ const Chatbot = () => {
   const [answers, setAnswers] = useState(() => JSON.parse(localStorage.getItem("answers")) || {});
   const [isTyping, setIsTyping] = useState(false);
   const [initialised, setInitialised] = useState(false);
-  const [conMessage, setConMessage] = useState("");
   const [exampleAnswers, setExampleAnswers] = useState(() =>
     JSON.parse(localStorage.getItem("exampleAnswers")) || []
   );
@@ -37,6 +36,7 @@ const Chatbot = () => {
     position: 0,
   });
 
+  const [lastSurveyQuestionIndex, setLastSurveyQuestionIndex] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const chatBoxRef = useRef(null);
@@ -58,8 +58,9 @@ const Chatbot = () => {
     localStorage.setItem("fixedMessages", JSON.stringify(fixedMessages));
     localStorage.setItem("exampleAnswers", JSON.stringify(exampleAnswers));
     localStorage.setItem("reportData", JSON.stringify(reportData));
+    localStorage.setItem("lastSurveyQuestionIndex", JSON.stringify(lastSurveyQuestionIndex));
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, questionIndex, email, answers, fixedMessages, exampleAnswers, reportData]);
+  }, [messages, questionIndex, email, answers, fixedMessages, exampleAnswers, reportData, lastSurveyQuestionIndex]);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -134,10 +135,11 @@ const Chatbot = () => {
       textElement.appendChild(span);
     });
   }, []);
+  
+  const sendToChatN8N = async (data) => {
 
-  const sendToN8N = async (data) => {
     const response = await fetch(
-      "https://liamalbrecht.app.n8n.cloud/webhook/d0cfdecc-b7a5-4938-b299-e6bd10a980cd",
+      "https://liamalbrecht.app.n8n.cloud/webhook/15695c64-0d39-4362-82be-7c9e73f1de4f", // Replace with your actual chat webhook URL
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -159,148 +161,95 @@ const Chatbot = () => {
     return response.json();
   };
 
-  const sendConfirmationToN8N = async (text) => {
-    const response = await fetch(
-      "https://liamalbrecht.app.n8n.cloud/webhook/f7c8632e-d2e5-4192-8129-b9b7f63f79ee",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
-      }
-    );
-    return response.json();
-  };
-
   const handleSend = async () => {
     if (!userInput.trim()) return;
-
+  
     setMessages((prev) => [...prev, { text: userInput, sender: "user" }]);
     setUserInput("");
     setExampleAnswers([]);
-
-    let tempConMessage = "";
-    if (!initialised) {
-      setIsTyping(true);
-      const confirmation = await sendConfirmationToN8N(userInput);
-
-      if (confirmation.text) {
-        setConMessage(confirmation.text);
-        tempConMessage = confirmation.text;
-
-        if (confirmation.text.toLowerCase().includes("yes")) {
-          setInitialised(true);
-        }
-      }
-
-      if (userInput.includes("?")) {
+    setIsTyping(true);
+  
+    const currentFixedQuestion = fixedMessages.length > 0 ? fixedMessages[fixedMessages.length - 1].text : "";
+    const lastBotMessage = messages
+      .filter((msg) => msg.sender === "bot")
+      .slice(-1)[0]?.text || "";
+  
+    // Email validation before sending to n8n when questionIndex is 1
+    let emailInput = ""
+    if (questionIndex === 1) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation
+      if (!emailRegex.test(userInput)) {
         setMessages((prev) => [
           ...prev,
-          {
-            text: "Great question! This survey helps assess the AI readiness of your business. It takes about 5-10 minutes. Let me know if you need more info. If you're ready, just say 'yes'!",
-            sender: "bot",
-          },
+          { text: "Please provide a valid email address (e.g., example@domain.com) before continuing or asking any questions.", sender: "bot" },
         ]);
         setIsTyping(false);
-        return;
+        inputRef.current.focus();
+        return; // Stop here; don’t proceed to n8n
       }
+      setEmail(userInput);
+      emailInput = userInput
     }
 
-    if (!initialised && messages.length === 1) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: "Welcome! This survey will take around 5-10 minutes and helps assess the AI readiness of your business. If you have any questions about the process, feel free to ask! Otherwise, type 'yes' to begin.",
-          sender: "bot",
-        },
-      ]);
-      setIsTyping(false);
-      return;
+    let emailToSend = ""
+    if(!email) {
+      emailToSend = emailInput
+    }else {
+      emailToSend = email
     }
-
-    if ((conMessage.includes("yes") || tempConMessage.includes("yes")) && questionIndex === null) {
-      setIsTyping(true);
-      const data = await sendToN8N({ questionIndex: 1 });
-
-      if (data.question) {
-        setIsTyping(false);
-        setQuestionIndex(1);
-        setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
-        if (data.example_answers) setExampleAnswers(data.example_answers);
-      }
-    } else if (questionIndex !== null) {
-      const nextIndex = questionIndex + 1;
-
-      if (nextIndex === 2) {
-        if (!userInput.includes("@")) {
+  
+    // Proceed to n8n if email is valid or not question 2
+    const chatData = await sendToChatN8N({
+      userInput,
+      questionIndex,
+      emailToSend,
+      answers,
+      lastSurveyQuestionIndex,
+      currentFixedQuestion,
+      lastBotMessage,
+      initialised,
+    });
+  
+    setIsTyping(false);
+  
+    if (chatData.text) {
+      setMessages((prev) => [...prev, { text: chatData.text, sender: "bot" }]);
+  
+      if (!chatData.isDeviatedAnswer) {
+        let nextIndex;
+  
+        if (questionIndex === null) {
+          nextIndex = 1;
+        } else {
+          nextIndex = questionIndex + 1;
+        }
+  
+        // Update survey state
+        setAnswers((prev) => ({ ...prev, [questionIndex]: userInput }));
+        setQuestionIndex(nextIndex);
+        setLastSurveyQuestionIndex(nextIndex);
+        setInitialised(true);
+  
+        if (chatData.example_answers) setExampleAnswers(chatData.example_answers);
+        else setExampleAnswers([]);
+  
+        if (chatData.fixedQuestion) {
+          setFixedMessages((prev) => [...prev, { text: chatData.fixedQuestion }]);
+        }
+  
+        if (chatData.text.includes("Fantastic, that should be it!")) {
           setMessages((prev) => [
             ...prev,
-            { text: "Please provide a valid email address before continuing.", sender: "bot" },
+            {
+              text: "In order to generate your report, please review your answers first by clicking 'Review Answers' below.",
+              sender: "bot",
+            },
           ]);
-          setIsTyping(false);
-          return;
+          setExampleAnswers([]);
         }
-        setEmail(userInput);
       }
-
-      setAnswers((prev) => ({ ...prev, [questionIndex]: userInput }));
-      setIsTyping(true);
-
-      const data = await sendToN8N({
-        questionIndex: nextIndex,
-        answer: userInput,
-        email: nextIndex === 2 ? userInput : email,
-      });
-
-      if (data.question) {
-        setIsTyping(false);
-        setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
-        setQuestionIndex(nextIndex);
-        if (data.example_answers) setExampleAnswers(data.example_answers);
-        else setExampleAnswers([]);
-      }
-
-      if (data.fixedQuestion) {
-        setIsTyping(false);
-        setFixedMessages((prev) => [...prev, { text: data.fixedQuestion }]);
-      }
-
-      if (data.question && data.question.includes("Fantastic, that should be it!")) {
-        setIsTyping(false);
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: "In order to generate your report, please review your answers first by clicking 'Review Answers' below.",
-            sender: "bot",
-          },
-        ]);
-        setExampleAnswers([]);
-      }
-    } else {
-      const lowerInput = userInput.toLowerCase();
-      if (["hello", "hi", "hey"].some((greeting) => lowerInput.startsWith(greeting))) {
-        setMessages((prev) => [
-          ...prev,
-          { text: "Hey there! This survey takes about 5-10 minutes. Let me know if you have any questions before we start! Otherwise, type 'yes' to begin.", sender: "bot" },
-        ]);
-      } else if (lowerInput.includes("not sure") || lowerInput.includes("maybe")) {
-        setMessages((prev) => [
-          ...prev,
-          { text: "No worries! Take your time, let me know when you're ready.", sender: "bot" },
-        ]);
-      } else if (lowerInput.includes("What's this about?")) {
-        setMessages((prev) => [
-          ...prev,
-          { text: "That's a great question! This survey helps assess [survey purpose]. It should only take about 5-10 minutes. Let me know if you need more details!", sender: "bot" },
-        ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          { text: "I see! Could you clarify if you're ready to start the survey?", sender: "bot" },
-        ]);
-      }
-      setIsTyping(false);
     }
-
+  
     inputRef.current.focus();
   };
 
@@ -308,51 +257,69 @@ const Chatbot = () => {
     setMessages((prev) => [...prev, { text: answer, sender: "user" }]);
     setUserInput("");
     setExampleAnswers([]);
-
-    const nextIndex = questionIndex + 1;
-
-    if (nextIndex === 2) {
-      if (!answer.includes("@")) {
-        setMessages((prev) => [
-          ...prev,
-          { text: "Please provide a valid email address before continuing.", sender: "bot" },
-        ]);
-        return;
-      }
-      setEmail(answer);
-    }
-
-    setAnswers((prev) => ({ ...prev, [questionIndex]: answer }));
     setIsTyping(true);
 
-    const data = await sendToN8N({
-      questionIndex: nextIndex,
-      answer: answer,
-      email: nextIndex === 2 ? answer : email,
+    // Get the current fixed question from fixedMessages (last element)
+    const currentFixedQuestion = fixedMessages.length > 0 ? fixedMessages[fixedMessages.length - 1].text : "";
+    
+    // Get the most recent bot message from messages
+    const lastBotMessage = messages
+      .filter((msg) => msg.sender === "bot")
+      .slice(-1)[0]?.text || "";
+
+    // Send example answer to the chat workflow (deviation handler)
+    const chatData = await sendToChatN8N({
+      userInput: answer,
+      questionIndex,
+      email,
+      answers,
+      lastSurveyQuestionIndex,
+      currentFixedQuestion,
+      lastBotMessage,
+      initialised,
     });
 
-    if (data.question) {
-      setIsTyping(false);
-      setMessages((prev) => [...prev, { text: data.question, sender: "bot" }]);
-      setQuestionIndex(nextIndex);
-      if (data.example_answers) setExampleAnswers(data.example_answers);
-      else setExampleAnswers([]);
-    }
+    setIsTyping(false);
 
-    if (data.fixedQuestion) {
-      setIsTyping(false);
-      setFixedMessages((prev) => [...prev, { text: data.fixedQuestion }]);
-    }
+    if (chatData.text) {
+      setMessages((prev) => [...prev, { text: chatData.text, sender: "bot" }]);
 
-    if (data.question && data.question.includes("Fantastic, that should be it!")) {
-      setIsTyping(false);
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: "In order to generate your report, please review your answers first by clicking 'Review Answers' below.",
-          sender: "bot",
-        },
-      ]);
+      // Handle survey logic only if isDeviatedAnswer is false
+      if (!chatData.isDeviatedAnswer) {
+        const nextIndex = chatData.questionIndex || questionIndex + 1;
+
+        if (nextIndex === 2) {
+          if (!answer.includes("@")) {
+            setMessages((prev) => [
+              ...prev,
+              { text: "Please provide a valid email address before continuing.", sender: "bot" },
+            ]);
+            return;
+          }
+          setEmail(answer);
+        }
+
+        setAnswers((prev) => ({ ...prev, [questionIndex]: answer }));
+        setQuestionIndex(nextIndex);
+        setLastSurveyQuestionIndex(nextIndex);
+
+        if (chatData.example_answers) setExampleAnswers(chatData.example_answers);
+        else setExampleAnswers([]);
+
+        if (chatData.fixedQuestion) {
+          setFixedMessages((prev) => [...prev, { text: chatData.fixedQuestion }]);
+        }
+
+        if (chatData.text.includes("Fantastic, that should be it!")) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              text: "In order to generate your report, please review your answers first by clicking 'Review Answers' below.",
+              sender: "bot",
+            },
+          ]);
+        }
+      }
     }
   };
 
@@ -375,10 +342,10 @@ const Chatbot = () => {
     setAnswers({});
     setFixedMessages([]);
     setInitialised(false);
-    setConMessage("");
     setExampleAnswers([]);
     setReportData(null);
     setShowReportPopup(false);
+    setLastSurveyQuestionIndex(null);
   };
 
   const handleFirstClose = () => {
