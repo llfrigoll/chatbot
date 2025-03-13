@@ -1,14 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "./ReviewAnswersPopup.css";
 
 const ReviewAnswersPopup = ({ answers, email, updateEmail, updateAnswers, fixedMessages, onFirstClose }) => {
   const [editedAnswers, setEditedAnswers] = useState({ ...answers });
-  const [editedEmail, setEditedEmail] = useState(email)
-  const [showPopup, setShowPopup] = useState(false);
+  const [editedEmail, setEditedEmail] = useState(email);
+  const [isVisible, setIsVisible] = useState(false); // Controls visibility
+  const [isAnimatingOut, setIsAnimatingOut] = useState(false); // Controls exit animation
   const [changedQuestions, setChangedQuestions] = useState({});
-  const [changedEmail, setChangedEmail] = useState(false)
-  const [hasBeenClosed, setHasBeenClosed] = useState(false); // Track if popup has been closed
+  const [changedEmail, setChangedEmail] = useState(false);
+  const [hasBeenClosed, setHasBeenClosed] = useState(false);
+
+  // Handle opening the popup
+  const handleOpen = () => {
+    setIsVisible(true);
+    setIsAnimatingOut(false);
+  };
+
+  // Handle closing the popup with animation
+  const handleClose = () => {
+    setIsAnimatingOut(true);
+  };
+
+  // Effect to handle cleanup after exit animation
+  useEffect(() => {
+    if (isAnimatingOut) {
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+        setEditedAnswers({ ...answers });
+        setEditedEmail(email);
+        setChangedQuestions({});
+        setChangedEmail(null);
+
+        if (!hasBeenClosed) {
+          setHasBeenClosed(true);
+          onFirstClose();
+        }
+      }, 300); // Match this with your animation duration (0.3s)
+      return () => clearTimeout(timer);
+    }
+  }, [isAnimatingOut, answers, email, hasBeenClosed, onFirstClose]);
 
   // Handle answer change for a specific question
   const handleAnswerChange = (questionIndex, newValue) => {
@@ -93,61 +124,41 @@ const ReviewAnswersPopup = ({ answers, email, updateEmail, updateAnswers, fixedM
     }
   };
 
-  // Handle closing the popup
-  const handleClose = () => {
-    setShowPopup(false);
-    setEditedAnswers({ ...answers }); // Reset to original answers
-    setEditedEmail(email)
-    setChangedQuestions({});
-    setChangedEmail(null)
-
-    if (!hasBeenClosed) {
-      setHasBeenClosed(true);
-      onFirstClose(); // Trigger the callback only the first time
-    }
-  };
-
   return (
     <>
-      <button
-        className="review_answers_button"
-        onClick={() => setShowPopup(true)}
-      >
-        Review Answers<img src="/Group 2.png" alt="Arrow" className="arrow-icon2"/>
+      <button className="review_answers_button" onClick={handleOpen}>
+        REVIEW ANSWERS<img src="/Group 2.png" alt="Arrow" className="arrow-icon2"/>
       </button>
 
-      {showPopup && (
-        <div className="popup_container">
-          <div className="popup_box">
-            <h2 className="popup_title">Review Your Answers</h2>
+      {isVisible && (
+        <div className={`popup_container_review ${isAnimatingOut ? 'fade-out' : ''}`}>
+          <div className={`popup_box_review ${isAnimatingOut ? 'popup_exit' : 'popup_enter'}`}>
+            <h2 className="popup_title_review">Review Your Answers</h2>
 
             <div className="questions_list">
-            <div key={1} className="question_item">
-                    <div className="question_text">Change your email:</div>
-                    <div className="answer_container">
-                      <input
-                        type="text"
-                        className="answer_input"
-                        value={editedEmail}
-                        onChange={(e) =>
-                          handleEmailChange(e.target.value)
-                        }
-                        placeholder="Your answer..."
-                      />
-                      {changedEmail && (
-                        <button
-                          className="save_button"
-                          onClick={() => handleEmailSave()}
-                        >
-                          Save
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
+              <div key={1} className="question_item">
+                <div className="question_text">Change your email:</div>
+                <div className="answer_container">
+                  <input
+                    type="text"
+                    className="answer_input"
+                    value={editedEmail}
+                    onChange={(e) => handleEmailChange(e.target.value)}
+                    placeholder="Your answer..."
+                  />
+                  {changedEmail && (
+                    <button
+                      className="save_button"
+                      onClick={() => handleEmailSave()}
+                    >
+                      Save
+                    </button>
+                  )}
+                </div>
+              </div>
 
               {fixedMessages.filter((_, index) => index + 1 !== fixedMessages.length).map((question, index) => {
-                const questionIndex = index + 2; // Adjust for offset
+                const questionIndex = index + 2;
                 const answer = editedAnswers[questionIndex] || "";
                 const isChanged = changedQuestions[questionIndex];
 
@@ -178,8 +189,8 @@ const ReviewAnswersPopup = ({ answers, email, updateEmail, updateAnswers, fixedM
               })}
             </div>
 
-            <button className="close_button" onClick={handleClose}>
-              Close
+            <button className="close_button_review" onClick={handleClose}>
+              CLOSE
             </button>
           </div>
         </div>
@@ -194,7 +205,7 @@ ReviewAnswersPopup.propTypes = {
   updateAnswers: PropTypes.func.isRequired,
   updateEmail: PropTypes.func.isRequired,
   fixedMessages: PropTypes.array.isRequired,
-  onFirstClose: PropTypes.func.isRequired, // New prop for callback
+  onFirstClose: PropTypes.func.isRequired,
 };
 
 export default ReviewAnswersPopup;

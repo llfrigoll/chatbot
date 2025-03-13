@@ -1,6 +1,6 @@
 /* Main container */
 .chat-container {
-  background: linear-gradient(270deg, #000000 0%, #1a1a1a 180%);
+  background: linear-gradient(270deg, #000000 0%, #101010 180%);
   background-size: cover;      /* or contain, or specific size */
   background-position: center; /* or top, bottom, etc. */
   background-repeat: no-repeat; /* or repeat, repeat-x, repeat-y */
@@ -232,7 +232,7 @@
   margin-top: -42.5%;
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(109, 109, 109, 0.18);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   padding: 50px 0px 1% 20px;
@@ -371,8 +371,8 @@
 /* Actual progress fill */
 .progress-bar {
   height: 100%;
-  background: white;
-  filter: drop-shadow(20px 0px 5px rgba(255, 255, 255, 1));
+  background: rgb(232, 230, 230);
+  filter: drop-shadow(2px 0px 5px rgba(255, 255, 255, 1));
   transition: width 0.4s ease; /* Smooth fill animation */
 }
 
@@ -423,6 +423,7 @@
     border-radius: 10px 10px 10px 0px;
     padding: 10px 20px 10px 20px;
     margin-left: -5px;
+    box-shadow: -5px 5px 12px -12px rgb(0, 0, 0);
   }
   
   /* User messages */
@@ -567,10 +568,11 @@
     background-color: transparent;
     border-width: 1px;
     border-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
     color: white;
     padding: 7px 20px;
     font-size: 14px;
-    margin-left: 17%;
+    margin-left: 17.5%;
     margin-top: -3.8%;
     cursor: pointer;
     transition: 0.3s;
@@ -638,7 +640,7 @@
 }
 
 .submit_button:hover {
-  background-color: #ffffff48;
+  background-color: #ffffff20;
 }
 
 .submit-button-container::after {

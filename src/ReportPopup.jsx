@@ -1,16 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "./ReportPopup.css";
 
 const ReportPopup = ({ reportData, onClose }) => {
   const [showPopup, setShowPopup] = useState(true);
+  const [isClosing, setIsClosing] = useState(false);
 
   const handleClose = () => {
-    setShowPopup(false);
-    onClose(); // Clear report data in parent component
+    setIsClosing(true); // Trigger exit animation
   };
 
-  // Extract agents, overall rating, and summary from reportData
+  useEffect(() => {
+    if (isClosing) {
+      const timer = setTimeout(() => {
+        setShowPopup(false);
+        onClose(); // Clear report data in parent component after animation
+      }, 300); // Match the animation duration (0.3s)
+      return () => clearTimeout(timer);
+    }
+  }, [isClosing, onClose]);
+
   const agents = reportData.filter((item) => item.agent).map((item) => item.agent);
   const overallRating = reportData.find((item) => item.overall_rating)?.overall_rating || 0;
   const summaryText = reportData.find((item) => item.summary_text)?.summary_text || "";
@@ -18,12 +27,11 @@ const ReportPopup = ({ reportData, onClose }) => {
   return (
     <>
       {showPopup && (
-        <div className="popup_container">
-          <div className="popup_box">
+        <div className={`popup_container ${isClosing ? "fadeOut" : ""}`}>
+          <div className={`popup_box ${isClosing ? "popupOut" : ""}`}>
             <h2 className="popup_title_report">Your AI Opportunity Report</h2>
 
             <div className="report_content">
-              {/* Top row with 4 agent bubbles */}
               <div className="agent_bubbles">
                 {agents.map((agent, index) => (
                   <div key={index} className="agent_bubble">
@@ -33,18 +41,16 @@ const ReportPopup = ({ reportData, onClose }) => {
                 ))}
               </div>
 
-              {/* Centered overall rating bubble */}
               <div className="overall_bubble">
                 <div className="overall_rating">{overallRating}</div>
                 <div className="metric_label">Overall AI Potential</div>
               </div>
 
-              {/* Summary text below */}
               <div className="summary_text">{summaryText}</div>
             </div>
 
             <button className="close_button" onClick={handleClose}>
-              Close
+              CLOSE
             </button>
           </div>
         </div>

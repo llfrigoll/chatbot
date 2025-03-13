@@ -1,143 +1,216 @@
-/* Popup container (unchanged) */
-.popup_container {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-  }
-  
-  /* Popup box */
-  .popup_box {
-    background-color: black;
-    padding: 20px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    width: 90%;
-    max-width: 600px;
-    max-height: 80vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  /* Popup title */
-  .popup_title {
-    font-size: 24px;
-    color: white;
-    margin-bottom: 10px;
-    margin-left: -67%;
-    text-align: left;
-  }
-  
-  /* Scrollable questions list */
-  .questions_list {
-    flex: 1;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
-    padding-right: 10px;
-    margin-left: 2%;
-  }
-  
-  /* Individual question item */
-  .question_item {
-    margin-bottom: 20px;
-  }
-  
-  /* Question text */
-  .question_text {
-    font-size: 14px;
-    color: #ffffffb8;
-    margin-bottom: 8px;
-    word-wrap: break-word;
-  }
-  
-  /* Answer container (input + save button) */
-  .answer_container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  /* Answer input field */
-  .answer_input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #e5e7eb;
-    font-size: 14px;
-    background-color: #f9f9f9;
-    color: #333;
-  }
-  
-  .answer_input:focus {
-    outline: none;
-    border-color: lightgray;
-    box-shadow: 0 0 0 1px rgba(51, 84, 255, 0.2);
-  }
-  
-  /* Save button (appears when answer is changed) */
-  .save_button {
-    background-color: black;
-    color: white;
-    border: none;
-    padding: 6px 16px;
-    border-radius: 50px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  
-  .save_button:hover {
-    background-color: #ffffff20;
-  }
-  
-  /* Close button */
-  .close_button {
-    background-color: transparent;
-    border-width: 1px;
-    border-color: rgba(255, 255, 255, 0.3);
-    border-radius: 50px;
-    padding: 10px;
-    font-size: 14px;
-    margin-top: 20px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
+/* Popup container */
+.popup_container_review {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.3s ease-out forwards;
+}
 
-  .close_button:hover {
-    background-color: #ffffff20;
+.popup_container_review.fade-out {
+  animation: fadeOut 0.3s ease-in forwards;
+}
+
+/* Popup box */
+.popup_box_review {
+  background-color: rgb(22, 22, 22);
+  border-width: 1px;
+  border-color: #ffffff20;
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  width: 64%;
+  height: 93.5%;
+  margin-left: 33%;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+}
+
+/* Animation classes */
+.popup_enter {
+  animation: fadeInScale 0.3s ease-out forwards;
+}
+
+.popup_exit {
+  animation: fadeOutScale 0.3s ease-in forwards;
+}
+
+/* Keyframes for entrance */
+@keyframes fadeInScale {
+  from {
+      opacity: 0;
+      transform: scale(0.95);
   }
-    
-  /* Responsive adjustments */
-  @media screen and (max-width: 600px) {
-    .popup_box {
+  to {
+      opacity: 1;
+      transform: scale(1);
+  }
+}
+
+/* Keyframes for exit */
+@keyframes fadeOutScale {
+  from {
+      opacity: 1;
+      transform: scale(1);
+  }
+  to {
+      opacity: 0;
+      transform: scale(0.95);
+  }
+}
+
+/* Keyframes for background fade */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+      opacity: 1;
+  }
+  to {
+      opacity: 0;
+  }
+}
+
+/* Popup title */
+.popup_title_review {
+  font-size: 24px;
+  font-weight: bold;
+  color: rgb(232, 230, 230);
+  margin-bottom: 10px;
+  margin-left: 1.5%;
+  text-align: left;
+}
+
+/* Scrollable questions list */
+.questions_list {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
+  padding-right: 10px;
+  margin-left: 2%;
+}
+
+/* Individual question item */
+.question_item {
+  margin-bottom: 20px;
+}
+
+/* Question text */
+.question_text {
+  font-size: 14px;
+  color: #ffffffb8;
+  margin-bottom: 8px;
+  word-wrap: break-word;
+}
+
+/* Answer container (input + save button) */
+.answer_container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Answer input field */
+.answer_input {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 14px;
+  background-color: rgb(48, 48, 48);
+  border-radius: 15px;
+  color: rgb(232, 230, 230);
+  border: 1px solid transparent;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.answer_input:hover {
+  background-color: rgb(55, 55, 55);
+  border: 1px solid transparent;
+}
+
+.answer_input:focus {
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgb(55, 55, 55);
+}
+
+/* Save button (appears when answer is changed) */
+.save_button {
+  background-color: black;
+  color: rgb(232, 230, 230);
+  border: none;
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.save_button:hover {
+  background-color: #ffffff20;
+}
+
+/* Close button */
+.close_button_review {
+  background-color: transparent;
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgb(232, 230, 230);
+  border-radius: 50px;
+  width: 16%;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-left: 1.5%;
+  cursor: pointer;
+  transition: 0.3s;
+  padding: 8px 20px;
+}
+
+.close_button_review:hover {
+  background-color: #ffffff20;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+  .popup_box_review {
       width: 95%;
       padding: 15px;
-    }
-  
-    .popup_title {
+  }
+
+  .popup_title_review {
       font-size: 20px;
-    }
-  
-    .question_text {
+  }
+
+  .question_text {
       font-size: 12px;
-    }
-  
-    .answer_input {
+  }
+
+  .answer_input {
       font-size: 12px;
       padding: 6px 10px;
-    }
-  
-    .save_button {
+  }
+
+  .save_button {
       padding: 5px 12px;
       font-size: 10px;
-    }
-  
-    .close_button {
+  }
+
+  .close_button_review {
       padding: 8px;
       font-size: 12px;
-    }
   }
+}
