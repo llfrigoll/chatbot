@@ -103,10 +103,7 @@
 
 .agent_name {
   font-size: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100px;
+  max-width: 80%;
 }
 
 .overall_bubble {
@@ -153,7 +150,7 @@
   border-radius: 20px;
   border-width: 1px;
   border-color: rgba(255, 255, 255, 0.3);
-  margin-top: -40.5%;
+  margin-top: -33.5%;
   margin-left: -48%;
   max-width: 100%;
   width: 50%;
@@ -169,7 +166,7 @@
   width: 16%;
   padding: 8px 20px;
   font-size: 14px;
-  margin-top: 4.5%;
+  margin-top: 16.5%;
   cursor: pointer;
   transition: 0.3s;
   font-weight: bold;
