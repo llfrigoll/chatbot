@@ -8,7 +8,7 @@ const Chatbot = () => {
   const [messages, setMessages] = useState(() =>
     JSON.parse(localStorage.getItem("chatMessages")) || [
       {
-        text: "Hi, I am an AI Opportunity Audit bot by Balmer Agency - if you answer a few questions for me I can provide an evaluation on your business.",
+        text: "Hi, I am the AI Business Acceleration bot. If you answer a few questions for me, I can evaluate the areas of your business that could benefit from using AI! This should take 5-10 mins. Let me know if you are ready and we can get started. Otherwise, if you have any more questions, feel free to ask.",
         sender: "bot",
       },
     ]
@@ -42,7 +42,7 @@ const Chatbot = () => {
   const chatBoxRef = useRef(null);
   const circleTextRef = useRef(null);
 
-  const numOfQuestions = 15;
+  const numOfQuestions = 14;
   const progressPercentage =
     questionIndex > 2 ? Math.round(((questionIndex - 2) / numOfQuestions) * 100) : 0;
 
@@ -333,7 +333,7 @@ const Chatbot = () => {
     localStorage.clear();
     setMessages([
       {
-        text: "Hi, I am an AI Opportunity Audit bot by Balmer Agency - if you answer a few questions for me I can provide an evaluation on your business.",
+        text: "Hi, I am the AI Business Acceleration bot. If you answer a few questions for me, I can evaluate the areas of your business that could benefit from using AI! This should take 5-10 mins. Let me know if you are ready and we can get started. Otherwise, if you have any more questions, feel free to ask.",
         sender: "bot",
       },
     ]);
