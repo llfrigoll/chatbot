@@ -1119,7 +1119,7 @@
 }
 
 /* Specific Adjustments for 425px Width (Large Mobile) */
-@media screen and (min-width: 420px) and (max-width: 450px) and (max-height: 768px) {
+@media screen and (min-width: 420px) and (max-width: 550px) and (max-height: 768px) {
   .chat-container {
     padding-right: 1.2%;
     background-color: #000000;
