@@ -454,13 +454,14 @@
     background-color: rgb(48, 48, 48);
     flex: 1;
     padding: 10px 5px 10px 20px;
-    margin-right: 4%;
+    margin-right: 3%;
     font-size: 14px;
     border-radius: 15px;
     color: rgb(232, 230, 230);
     border: 1px solid rgb(48, 48, 48); /* Match the background initially */
     transition: border-color 0.3s, background-color 0.3s; /* Specify properties to transition */
   }
+
   .input-box:hover {
     background-color: rgb(55, 55, 55);
   }
@@ -474,7 +475,7 @@
 
   .send-button {
     position: absolute;
-    right: 3.5%;        /* Distance from the right edge */
+    right: 2.5%;        /* Distance from the right edge */
     top: 50%;           /* Vertically center */
     transform: translateY(-50%); /* Adjust for vertical centering */
     display: flex;
@@ -816,6 +817,10 @@
     font-size: 10px;
   }
 
+  .example-answers-label {
+    margin-right: -0.5%;
+  }
+
   .chat-box {
     height: 100vh;
     max-width: 98%;
@@ -864,6 +869,7 @@
     padding: 7px 5px 7px 15px;
     margin-right: 10px;
     font-size: 10px;
+    border-radius: 12px;
   }
 
   .send-button {
@@ -892,13 +898,13 @@
     font-size: 16px;
     width: 45%;
     margin-right: 51%;
-    margin-top: 14%;
+    margin-top: 16%;
   }
 
   .background-grid {
     max-width: 68%;
     margin: 11% auto;
-    margin-top: -23%;
+    margin-top: -25%;
     margin-left: 30%;
     transform: scaleX(-1);
   }
@@ -1037,6 +1043,7 @@
   .input-box {
     padding: 6px 4px 6px 12px;
     font-size: 12px;
+    border-radius: 12px;
   }
 
   .send-button {
@@ -1112,7 +1119,7 @@
 }
 
 /* Specific Adjustments for 425px Width (Large Mobile) */
-@media screen and (min-width: 420px) and (max-width: 430px) and (max-height: 768px) {
+@media screen and (min-width: 420px) and (max-width: 450px) and (max-height: 768px) {
   .chat-container {
     padding-right: 1.2%;
     background-color: #000000;
@@ -1197,7 +1204,7 @@
   .background-grid {
     max-width: 68%;
     margin-left: 29%;
-    margin-top: -21%;
+    margin-top: -24%;
   }
 
   .circle-text {

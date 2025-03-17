@@ -227,49 +227,237 @@ to {
 }
 }
   
-  /* Responsive adjustments */
-  @media screen and (max-width: 600px) {
-    .popup_box {
-      width: 95%;
-      padding: 15px;
-    }
-  
-    .popup_title {
-      font-size: 20px;
-    }
-  
-    .agent_bubble {
-      width: 60px;
-      height: 60px;
-      font-size: 12px;
-    }
-  
-    .agent_rating {
-      font-size: 14px;
-    }
-  
-    .agent_name {
-      font-size: 10px;
-      max-width: 50px;
-    }
-  
-    .overall_bubble {
-      width: 120px;
-      height: 120px;
-      font-size: 20px;
-    }
-  
-    .metric_label {
-      font-size: 12px;
-    }
-  
-    .summary_text {
-      font-size: 14px;
-      padding: 10px;
-    }
-  
-    .close_button {
-      padding: 8px;
-      font-size: 12px;
-    }
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+  .popup_box {
+    width: 100%;
+    height: 112vh;
+    margin-top: -80%;
+    background-color: rgb(22, 22, 22);
   }
+
+  .popup_title_report {
+    font-size: 18px;
+    margin-left: -5%; /* Center it by removing negative margin */
+    text-align: left;
+    margin-top: 90%;
+  }
+
+  .summary_text {
+    font-size: 12px;
+    padding: 15px 10px;
+    margin-top: -215%; /* Position directly below title */
+    width: 110%; /* Slightly less than full width for padding */
+    margin-left: 2.5%; /* Center it */
+    max-width: none; /* Remove max-width constraint */
+    text-align: left;
+  }
+
+  .overall_bubble {
+    width: 110px;
+    height: 110px;
+    font-size: 20px;
+    margin-top: -78.5%; /* Position below summary text */
+    margin-left: -65%;
+    margin-bottom: 20px; /* Space before agent bubbles */
+  }
+
+  .metric_label {
+    font-size: 10px;
+  }
+
+  .agent_bubbles {
+    width: 60%; /* Adjust width to fit beside overall bubble */
+    grid-template-columns: repeat(2, 1fr); /* Keep 2 columns */
+    margin-left: -140%;
+    margin-top: 140%;
+    position: relative; /* Ensure it stays in flow */
+    justify-content: center; /* Center the grid */
+    gap: 10px;
+  }
+
+  .agent_bubble {
+    width: 80px;
+    height: 60px;
+    font-size: 10px;
+    margin-left: 315%;
+    border-radius: 12px;
+  }
+
+  .agent_rating {
+    font-size: 14px;
+  }
+
+  .agent_name {
+    font-size: 10px;
+    max-width: 50px;
+  }
+
+  .close_button {
+    padding: 6px 15px;
+    font-size: 12px;
+    width: 35%;
+    margin-top: 57%; /* Adjust for new layout */
+    margin-left: 0; /* Center it */
+    display: block; /* Ensure it behaves as a block */
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+@media screen and (min-width: 370px) and (max-width: 380px) and (max-height: 768px) {
+  .popup_box {
+    width: 100%;
+    height: 110vh; /* Slightly reduced height for smaller screens */
+    margin-top: -75%; /* Adjusted for better positioning */
+    background-color: rgb(22, 22, 22);
+  }
+
+  .popup_title_report {
+    font-size: 20px; /* Slightly smaller font for smaller screen */
+    margin-left: -10%;
+    text-align: left;
+    margin-top: 81%; /* Adjusted for proportionality */
+    margin-bottom: 8%;
+  }
+
+  .summary_text {
+    font-size: 12px; /* Slightly smaller text */
+    padding: 12px 10px;
+    margin-top: -177%; /* Adjusted to fit below title */
+    width: 105%;
+    padding-bottom: 8%;
+    margin-left: 1%;
+    max-width: none;
+    text-align: left;
+  }
+
+  .overall_bubble {
+    width: 120px; /* Slightly smaller bubble */
+    height: 120px;
+    font-size: 18px; /* Adjusted font size */
+    margin-top: -63%; /* Positioned below summary */
+    margin-left: -65%;
+    margin-bottom: 15px;
+  }
+
+  .metric_label {
+    font-size: 9px; /* Adjusted for smaller screen */
+  }
+
+  .agent_bubbles {
+    width: 65%; /* Slightly wider to fit content */
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: -130%;
+    margin-top: 110%; /* Adjusted positioning */
+    position: relative;
+    justify-content: center;
+    gap: 8px; /* Reduced gap */
+  }
+
+  .agent_bubble {
+    width: 95px;
+    height: 55px;
+    font-size: 9px;
+    margin-left: 280%; /* Adjusted for alignment */
+    border-radius: 10px;
+  }
+
+  .agent_rating {
+    font-size: 13px; /* Slightly smaller */
+  }
+
+  .agent_name {
+    font-size: 9px;
+    max-width: 45px; /* Adjusted for smaller bubble */
+  }
+
+  .close_button {
+    padding: 5px 12px;
+    font-size: 11px;
+    width: 40%;
+    margin-top: 49%; /* Adjusted for layout */
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+}
+
+@media screen and (min-width: 420px) and (max-width: 450px) and (max-height: 768px) {
+  .popup_box {
+    width: 100%;
+    height: 115vh; /* Slightly taller for larger screens */
+    margin-top: -85%; /* Adjusted for better fit */
+    background-color: rgb(22, 22, 22);
+  }
+
+  .popup_title_report {
+    font-size: 20px; /* Larger font for bigger screen */
+    margin-left: 0; /* Centered */
+    text-align: left;
+    margin-left: -25%;
+    margin-top: 88%; /* Adjusted positioning */
+  }
+
+  .summary_text {
+    font-size: 12.5px; /* Larger text */
+    padding: 18px 12px;
+    margin-top: -150%; /* Adjusted to fit below title */
+    width: 106%; /* Slightly wider */
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-bottom: 2%;
+    max-width: none;
+    text-align: left;
+  }
+
+  .overall_bubble {
+    width: 140px; /* Larger bubble */
+    height: 140px;
+    font-size: 22px; /* Larger font */
+    margin-top: -61%; /* Positioned below summary */
+    margin-left: -65%;
+    margin-bottom: 25px;
+  }
+
+  .metric_label {
+    font-size: 11px; /* Slightly larger */
+  }
+
+  .agent_bubbles {
+    width: 60%; /* Adjusted width */
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: -140%;
+    margin-top: 85%; /* Adjusted positioning */
+    position: relative;
+    justify-content: center;
+    gap: 12px; /* Slightly larger gap */
+  }
+
+  .agent_bubble {
+    width: 105px; /* Larger bubble */
+    height: 65px;
+    font-size: 12px;
+    margin-left: 320%;
+    border-radius: 14px;
+  }
+
+  .agent_rating {
+    font-size: 15px; /* Larger rating */
+  }
+
+  .agent_name {
+    font-size: 11px;
+    max-width: 60px; /* Adjusted for larger bubble */
+  }
+
+  .close_button {
+    padding: 7px 18px;
+    font-size: 13px;
+    width: 35%;
+    margin-top: 41.5%; /* Adjusted for layout */
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+}
