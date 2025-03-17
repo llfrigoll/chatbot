@@ -798,6 +798,7 @@
     width: 100vw;
     padding-right: 1.5%;
   }
+
   .view_report_button {
     padding: 5px 10px;
     border-radius: 50px;
@@ -805,13 +806,16 @@
     margin-left: 10%;
     margin-bottom: 1%;
   }
+
   .example-answers-container {
     margin-right: 5%;
   }
+
   .example-answer-button {
     padding: 5px 10px;
     font-size: 10px;
   }
+
   .chat-box {
     height: 100vh;
     max-width: 98%;
@@ -820,12 +824,14 @@
     margin-right: 0.1%;
     padding: 20px 0 1% 0;
   }
+
   .messages {
     margin-bottom: -55%;
     margin-top: 1%;
     height: 80%;
     gap: 8px;
   }
+
   .message {
     padding: 10px;
     border-radius: 8px;
@@ -833,49 +839,62 @@
     margin-top: 1%;
     margin-left: -7%;
   }
+
   .bot-message {
     border-radius: 10px 10px 10px 0px;
     padding: 5px 10px;
     font-size: 10px;
     margin-left: -7%;
   }
+
   .user-message {
     margin-right: 2%;
     border-radius: 10px 10px 0px 10px;
     padding: 5px 10px;
     font-size: 10px;
   }
+
   .input-container {
     margin-top: 60%;
     margin-bottom: 4%;
     margin-left: 3%;
   }
+
   .input-box {
     padding: 7px 5px 7px 15px;
     margin-right: 10px;
     font-size: 10px;
   }
+
   .send-button {
     padding: 10px 30px;
     margin-right: -13px;
     background-color: transparent;
   }
+
   .send-button svg {
     height: 12px;
     width: 12px;
   }
+
+  .send-button:hover {
+    background-color: transparent;
+  }
+
   .chat-container h1 {
     font-size: 20px;
     margin-top: 4.5%;
     padding-right: 50%;
     margin-left: -3%;
   }
+
   .chat-container p {
     font-size: 16px;
     width: 45%;
     margin-right: 51%;
     margin-top: 14%;
   }
+
   .background-grid {
     max-width: 68%;
     margin: 11% auto;
@@ -883,52 +902,63 @@
     margin-left: 30%;
     transform: scaleX(-1);
   }
+
   .background-grid img:nth-child(1) {
     margin-right: 2px;
     width: 40%;
     height: 50%;
   }
+
   .background-grid img:nth-child(2) {
     margin-left: -50%;
     width: 60%;
     height: 60%;
   }
+
   .background-grid img:nth-child(3) {
     margin-left: 0;
     margin-top: -38%;
     width: 40%;
     height: auto;
   }
+
   .circle-text {
     top: 12%;
     left: 75%;
     width: 10px;
     height: 10px;
   }
+
   .circle-text .text {
     font-size: 12px;
   }
+
   .circle-text .text span {
     height: 5px;
     transform-origin: 0 5px;
   }
+
   .progress-bar {
     height: 4px;
   }
+
   .progress-bar-container {
     width: 92%;
     margin-left: 4%;
     margin-top: -1.5%;
   }
+
   .restart_button_container {
     margin-top: -1%;
     margin-left: -7%;
   }
+
   .restart_button {
     padding: 5px 10px;
     font-size: 10px;
     margin-left: 10%;
   }
+
   .review_answers_button {
     padding: 5px 10px;
     font-size: 10px;
@@ -936,6 +966,7 @@
     margin-top: -8%;
     margin-bottom: 2%;
   }
+  
   .submit_button {
     padding: 6px 10px;
     font-size: 10px;
@@ -1084,104 +1115,130 @@
 @media screen and (min-width: 420px) and (max-width: 430px) and (max-height: 768px) {
   .chat-container {
     padding-right: 1.2%;
+    background-color: #000000;
   }
+
   .view_report_button {
-    font-size: 10px;
-    padding: 5px 10px;
+    font-size: 12px;
+    padding: 6px 15px;
     margin-left: 9%;
   }
+
   .example-answers-container {
     margin-right: 5%;
   }
+
   .example-answer-button {
     padding: 5px 10px;
     font-size: 10px;
   }
+  
   .chat-box {
     max-width: 97%;
     margin-top: -9%;
     padding: 18px 0 1% 0;
   }
+
   .messages {
     margin-bottom: -58%;
     height: 80%;
     gap: 7px;
   }
+
   .message {
     max-width: 62%;
     margin-left: -7.5%;
-    font-size: 10px;
+    font-size: 12px;
     padding: 9px;
   }
+
   .bot-message {
-    padding: 5px 9px;
-    font-size: 10px;
-    margin-left: -7.5%;
+    padding: 5px 10px;
+    font-size: 12px;
+    margin-left: -5%;
   }
+
   .user-message {
-    padding: 5px 9px;
-    font-size: 10px;
-    margin-right: 1.5%;
+    padding: 5px 10px;
+    font-size: 12px;
+    margin-right: 1%;
   }
+
   .input-container {
     margin-top: 61%;
     margin-left: 2.5%;
   }
+
   .input-box {
     padding: 7px 5px 7px 14px;
-    font-size: 10px;
+    font-size: 12px;
   }
+
   .send-button {
     padding: 9px 28px;
   }
+
   .send-button svg {
-    height: 11px;
-    width: 11px;
+    height: 12px;
+    width: 12px;
   }
+
   .chat-container h1 {
-    font-size: 19px;
-    margin-left: -3.5%;
+    font-size: 24px;
+    margin-left: -1%;
   }
+
   .chat-container p {
-    font-size: 15px;
-    width: 46%;
-    margin-right: 51%;
+    font-size: 20px;
+    width: 35%;
+    margin-right: 61%;
   }
+
   .background-grid {
     max-width: 68%;
     margin-left: 29%;
-    margin-top: -24%;
+    margin-top: -21%;
   }
+
   .circle-text {
-    top: 11.5%;
-    left: 74.5%;
+    top: 15.5%;
+    left: 78%;
     width: 9px;
     height: 9px;
   }
+
   .circle-text .text {
     font-size: 11px;
   }
+
   .circle-text .text span {
     height: 4.5px;
     transform-origin: 0 4.5px;
   }
+
   .progress-bar-container {
-    width: 91%;
-    margin-left: 3.5%;
+    width: 94%;
+    margin-left: 3%;
+    margin-top: 0%;
+    margin-bottom: 3%;
   }
+
   .restart_button {
-    padding: 5px 10px;
-    font-size: 10px;
+    padding: 6px 15px;
+    font-size: 12px;
     margin-left: 9%;
   }
+
   .review_answers_button {
-    padding: 5px 10px;
-    font-size: 10px;
-    margin-left: 45%;
-    margin-top: -8.5%;
+    padding: 6px 15px;
+    font-size: 12px;
+    margin-left: 41%;
+    margin-top: -7.2%;
   }
+
   .submit_button {
-    padding: 6px 10px;
-    font-size: 10px;
+    padding: 6px 15px;
+    font-size: 12px;
+    margin-left: 4%;
   }
 }
