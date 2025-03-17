@@ -801,10 +801,11 @@
 }
 
 .view_report_button {
-  padding: 5px 20px 5px 20px;
+  padding: 5px 10px 5px 10px;
   border-radius: 50px;
   font-size: 10px;
-  margin-left: 10px;
+  margin-left: 10%;
+  margin-bottom: 1%;
 }
 
 .example-answers-container {
@@ -819,9 +820,9 @@
 /* Chat box container */
 .chat-box {
   height: 100vh;
-  max-height: 86%;
   max-width: 98%;
-  margin-top: 20%;
+  margin-top: -8%;
+  margin-bottom: 3%;
   margin-right: 0.1%;
   padding: 20px 0px 1% 0px;
 }
@@ -831,6 +832,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: -55%;
+  margin-top: 1%;
   height: 80%;
   gap: 8px;
 }
@@ -846,16 +848,17 @@
 
 /* Bot messages */
 .bot-message {
-  border-radius: 30px 30px 30px 10px;
-  padding: 10px 20px 10px 20px;
+  border-radius: 10px 10px 10px 0px;
+  padding: 5px 10px 5px 10px;
   font-size: 10px;
+  margin-left: -7%;
 }
 
 /* User messages */
 .user-message {
-  margin-right: 5%;
-  border-radius: 30px 30px 10px 30px;
-  padding: 10px 20px 10px 20px;
+  margin-right: 2%;
+  border-radius: 10px 10px 0px 10px;
+  padding: 5px 10px 5px 10px;
   font-size: 10px;
 }
 
@@ -863,13 +866,13 @@
 .input-container {
   margin-top: 60%;
   margin-bottom: 3%;
-  margin-left: -7%;
+  margin-left: 3%;
   display: flex;
 }
 
 /* Input field */
 .input-box {
-  padding: 10px 5px 10px 20px;
+  padding: 7px 5px 7px 15px;
   margin-right: 10px;
   font-size: 10px;
 }
@@ -877,18 +880,102 @@
 /* Send button */
 .send-button {
   padding: 10px 30px;
-  margin-right: 20px;
-  font-size: 10px;
-}
-
-.send-button:hover {
-  background-color: #2563eb;
+  margin-right: -13px;
+  background-color: transparent;
 }
 
 .chat-container h1 {
   font-size: 20px;
-  margin-top: 2%;
+  margin-top: 4.5%;
   padding-right: 50%;
+  margin-left: -3%;
+}
+
+.chat-container p {
+  font-size: 16px;
+  width: 45%;
+  margin-right: 51%;
+  margin-top: 14%;
+}
+
+/* Flip the entire background grid horizontally */
+.background-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  grid-template-rows: auto auto; /* Two rows */
+  gap: 1px 0; /* Vertical gap only */
+  max-width: 68%;
+  margin: 11% auto;
+  margin-top: -23%;
+  margin-left: 30%; /* Your existing margin */
+  transform: scaleX(-1); /* Flip the grid horizontally */
+}
+
+/* Maintain original image positioning and spacing */
+.background-grid img:nth-child(1) {
+  grid-column: 1 / 2; /* First column */
+  grid-row: 1 / 2; /* First row */
+  margin-right: 2px; /* Original spacing */
+  width: 40%; /* Original width */
+  height: 50%; /* Original height */
+}
+
+.background-grid img:nth-child(2) {
+  grid-column: 2 / 3; /* Second column */
+  grid-row: 1 / 2; /* First row */
+  margin-left: -50%; /* Original spacing */
+  width: 60%; /* Original width */
+  height: 60%; /* Original height */
+}
+
+.background-grid img:nth-child(3) {
+  grid-column: 1 / 2; /* First column */
+  grid-row: 2 / 3; /* Second row */
+  margin-left: 0; /* Original spacing */
+  margin-top: -38%; /* Original vertical adjustment */
+  width: 40%; /* Original width */
+  height: auto; /* Original height */
+}
+
+/* Center the container and fix its position */
+.circle-text {
+  position: absolute; /* Fixed position */
+  top: 12%; /* Keep your custom vertical position */
+  left: 75%; /* Keep your custom horizontal position */
+  transform: translate(-50%, -50%); /* Center it precisely */
+  width: 10px; /* Reduced from 60px - adjust this to make it smaller */
+  height: 10px; /* Reduced from 60px - adjust this to make it smaller */
+}
+
+/* Style the container for the text and apply rotation */
+.circle-text .text {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-size: 12px; /* Reduced from 20px - adjust this for smaller text */
+  color: #ffffff;
+  animation: rotate 60s linear infinite; /* Animation unchanged */
+}
+
+/* Position each character in a circle */
+.circle-text .text span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 5px; /* Reduced from 30px - matches the new radius */
+  transform-origin: 0 5px; /* Reduced from 30px - matches the new radius */
+}
+
+.progress-bar {
+  height: 4px;
+}
+
+.progress-bar-container {
+  width: 92%;
+  margin-left: 4%;
+  margin-top: -1.5%;
 }
 
 .restart_button_container {
@@ -897,20 +984,22 @@
 }
 
 .restart_button {
-  padding: 5px 20px 5px 20px;
+  padding: 5px 10px 5px 10px;
   border-radius: 50px;
   font-size: 10px;
+  margin-left: 10%;
 }
 
 .review_answers_button {
-  padding: 5px 20px 5px 20px;
+  padding: 5px 10px 5px 10px;
   border-radius: 50px;
   font-size: 10px;
-  margin-left: 10px;
+  margin-left: 46%;
+  margin-top: -8%;
 }
 
 .submit_button {
-  padding: 6px 16px;
-  font-size: 12px;
+  padding: 6px 10px;
+  font-size: 10px;
 }
 }
