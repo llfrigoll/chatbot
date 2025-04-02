@@ -24,8 +24,7 @@
   grid-template-columns: 1fr 1fr; /* Two equal columns */
   grid-template-rows: auto auto; /* Two rows */
   gap: 1px 0; /* Vertical gap only, no horizontal gap between columns */
-  max-width: 68%;
-  margin: 20px auto;
+  max-width: 100%;
   margin-left: 2%;
 }
 
@@ -67,8 +66,8 @@
 /* Center the container and fix its position */
 .circle-text {
   position: absolute; /* Fixed position */
-  top: 50%; /* Your custom vertical position */
-  left: 22%; /* Your custom horizontal position */
+  top: 62%; /* Your custom vertical position */
+  left: 29.5%; /* Your custom horizontal position */
   transform: translate(-50%, -50%); /* Center it precisely */
   width: 60px; /* Matches 2 * radius */
   height: 60px; /* Matches 2 * radius */
@@ -91,7 +90,6 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  height: 30px; /* Matches the radius */
   transform-origin: 0 30px; /* Matches the radius */
 }
 
@@ -228,9 +226,9 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  max-height: 93%;
-  max-width: 65%;
-  margin-top: -42.5%;
+  max-width: 50%;
+  margin-top: -55.5%;
+  margin-bottom: 2%;
   display: flex;
   flex-direction: column;
   background: rgba(109, 109, 109, 0.18);
@@ -410,7 +408,7 @@
 
   /* Chat message bubbles */
   .message {
-    max-width: 40%;
+    max-width: 70%;
     word-wrap: break-word;
     contain: paint;
   }
@@ -516,7 +514,7 @@
     font-weight: bold;
     color: white;
     position: absolute;
-    left: 20px;
+    left: 1.7%;
     margin-top: 1%;
     padding-right: 70%;
   }
@@ -524,8 +522,9 @@
   .chat-container p {
     display: block;
     margin-left: 0%;
-    margin-right: 83.5%;
+    margin-right: 84.5%;
     margin-top: 5.5%;
+    margin-bottom: 1%;
     color: white;
     font-weight: lighter;
     font-size: 18px;
@@ -659,12 +658,12 @@
 }
 
 .chat-container h1 {
-  margin-right: -10%;
+  margin-right: -1%;
 }
 
 .chat-container p {
-  margin-top: 7%;
-  margin-right: 68.5%;
+  margin-top: 5%;
+  margin-right: 77.3%;
 }
 
 .view_report_button {
@@ -686,11 +685,17 @@
 /* Chat box container */
 .chat-box {
   height: 100vh;
-  max-height: 95%;
+  max-height: 90%;
+  width: 50%;
   max-width: 60%;
-  margin-top: -10.1%;
+  margin-top: -56%;
   margin-right: 0.1%;
   padding: 20px 0px 1% 0px;
+}
+
+.progress-bar-container {
+  margin-top: -1%;
+  margin-left: 3%;
 }
 
 /* Messages container */
@@ -707,7 +712,7 @@
 /* Chat message bubbles */
 .message {
   padding: 10px;
-  max-width: 45%;
+  width: 55%;
   margin-top: 1%;
   margin-left: -1%;
 }
@@ -724,6 +729,7 @@
   margin-right: 1%;
   border-radius: 8px 8px 0px 8px;
   padding: 10px 20px 10px 20px;
+  width: auto;
   font-size: 12px;
 }
 
@@ -747,9 +753,8 @@
 .send-button {
   padding: 0px 25px;
   height: 35px;
-  margin-right: 2.5%;
+  margin-right: -2%;
   font-size: 12px;
-  background-color: #000000;
 }
 
 .send-button:hover {
@@ -823,7 +828,8 @@
 
   .chat-box {
     height: 100vh;
-    max-width: 98%;
+    width: 100vw;
+    min-width: 98%;
     margin-top: -8%;
     margin-bottom: 3%;
     margin-right: 0.1%;
@@ -840,7 +846,7 @@
   .message {
     padding: 10px;
     border-radius: 8px;
-    max-width: 60%;
+    width: 60%;
     margin-top: 1%;
     margin-left: -7%;
   }
@@ -898,13 +904,13 @@
     font-size: 16px;
     width: 45%;
     margin-right: 51%;
-    margin-top: 16%;
+    padding-top: 20%;
   }
 
   .background-grid {
     max-width: 68%;
     margin: 11% auto;
-    margin-top: -25%;
+    margin-top: -35%;
     margin-left: 30%;
     transform: scaleX(-1);
   }
@@ -929,7 +935,7 @@
   }
 
   .circle-text {
-    top: 12%;
+    top: 10%;
     left: 75%;
     width: 10px;
     height: 10px;
@@ -1017,7 +1023,7 @@
   }
 
   .message {
-    max-width: 65%;
+    width: 65%;
     margin-left: -8%;
     font-size: 9px;
     padding: 8px;
@@ -1153,7 +1159,7 @@
   }
 
   .message {
-    max-width: 62%;
+    width: 62%;
     margin-left: -7.5%;
     font-size: 12px;
     padding: 9px;
