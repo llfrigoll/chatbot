@@ -1,3 +1,4 @@
+/* Base styles for popup */
 .popup_container {
   position: fixed;
   top: 0;
@@ -9,8 +10,9 @@
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(10px);
-  opacity: 0; /* Start hidden */
-  animation: fadeIn 0.3s ease-out forwards; /* Fade in animation */
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+  z-index: 1000;
 }
 
 .popup_box {
@@ -18,25 +20,25 @@
   border-radius: 20px;
   padding: 20px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   backdrop-filter: blur(100px);
-  opacity: 0; /* Start hidden */
-  transform: scale(0.9); /* Start slightly scaled down */
-  animation: popupIn 0.3s ease-out forwards; /* Scale and fade in */
-
+  opacity: 0;
+  transform: scale(0.9);
+  animation: popupIn 0.3s ease-out forwards;
+  overflow-y: auto;
 }
 
 .popup_title_report {
   font-size: 24px;
   color: rgb(232, 230, 230);
-  margin-bottom: 20px;
-  font-weight: bold;  
-  margin-left: -60%;
-  margin-top: 1%;
+  font-weight: bold;
+  text-align: left;
+  width: 100%;
+  margin: 20px 0 20px 0;
 }
 
 .report_content {
@@ -44,19 +46,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 60px;
+  gap: 30px;
 }
 
-/* Agent bubbles container */
 .agent_bubbles {
   display: grid;
-  width: 30%;
-  grid-template-columns: repeat(2, 1fr);
-  margin-bottom: 20px;
-  margin-left: 65%;
-  margin-top: 25%;
-  flex-wrap: wrap;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  width: 100%;
+  max-width: 600px;
   gap: 20px;
+  justify-content: center;
 }
 
 .agent_bubble {
@@ -64,7 +63,6 @@
   border-radius: 20px;
   width: 210px;
   height: 100px;
-  margin-left: -65%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -74,28 +72,21 @@
   text-align: center;
   padding: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s; /* Updated to 'all' to include border-color */
-  border: 1px solid transparent; /* Initial transparent border */
+  transition: all 0.3s;
+  border: 1px solid transparent;
 }
 
 .agent_bubble:hover {
-  scale: 1.01;
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Only change the color on hover */
+  transform: scale(1.01);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.agent_bubble:nth-child(2) {
-  background: rgba(255, 255, 255, 0.15); /* Change dynamically to different colour for 50-89 */
-}
-
-.agent_bubble:nth-child(3) {
-  background: rgba(255, 255, 255, 0.15); /* Change dynamically to different colour for 50-89 */
-}
-
+.agent_bubble:nth-child(2),
+.agent_bubble:nth-child(3),
 .agent_bubble:nth-child(4) {
-  background: rgba(255, 255, 255, 0.15); /* Change dynamically to different colour for 50-89 */
+  background: rgba(255, 255, 255, 0.15); /* Placeholder for dynamic colors */
 }
 
-/* Dynamic color based on rating (simplified, adjust as needed) */
 .agent_rating {
   font-weight: bold;
   font-size: 18px;
@@ -111,9 +102,6 @@
   border-radius: 20px;
   width: 440px;
   height: 200px;
-  margin-top: -56%;
-  margin-bottom: 12.5%;
-  margin-left: 53%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -122,12 +110,12 @@
   font-size: 24px;
   text-align: center;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Specify properties */
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .overall_bubble:hover {
   background-color: rgb(235, 235, 235);
-  transform: scale(1.01); /* Use transform for scaling */
+  transform: scale(1.01);
 }
 
 .overall_rating {
@@ -139,37 +127,29 @@
   margin-top: 5px;
 }
 
-/* Summary text */
 .summary_text {
   font-size: 16px;
   color: #ffffffb8;
   line-height: 1.5;
   text-align: left;
-  padding: 20px 20px;
+  padding: 20px;
   background-color: #1a1a1a;
   border-radius: 20px;
-  border-width: 1px;
-  border-color: rgba(255, 255, 255, 0.3);
-  margin-top: -40.5%;
-  margin-left: -48%;
-  max-width: 100%;
-  max-height: 100%;
-  width: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 100%;
 }
 
-/* Close button */
 .close_button {
   background-color: transparent;
   color: rgb(232, 230, 230);
-  border-width: 1px;
-  border-color: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 50px;
-  width: 16%;
   padding: 8px 20px;
   font-size: 14px;
-  margin-top: 12%;
+  width: 16%;
+  min-width: 120px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background-color 0.3s;
   font-weight: bold;
 }
 
@@ -179,87 +159,63 @@
 
 /* Entrance animations */
 @keyframes fadeIn {
-from {
-  opacity: 0;
-}
-to {
-  opacity: 1;
-}
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes popupIn {
-from {
-  opacity: 0;
-  transform: scale(0.9);
-}
-to {
-  opacity: 1;
-  transform: scale(1);
-}
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 /* Exit animations */
 .popup_container.fadeOut {
-animation: fadeOut 0.3s ease-in forwards;
+  animation: fadeOut 0.3s ease-in forwards;
 }
 
 .popup_box.popupOut {
-animation: popupOut 0.3s ease-in forwards;
+  animation: popupOut 0.3s ease-in forwards;
 }
 
 @keyframes fadeOut {
-from {
-  opacity: 1;
-}
-to {
-  opacity: 0;
-}
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 @keyframes popupOut {
-from {
-  opacity: 1;
-  transform: scale(1);
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.9); }
 }
-to {
-  opacity: 0;
-  transform: scale(0.9);
-}
-}
-  
+
 /* Responsive adjustments */
-@media screen and (max-width: 600px) {
+
+/* Extra Small Mobile (max-width: 400px) */
+@media screen and (max-width: 400px) {
   .popup_box {
-    width: 100%;
-    height: 112vh;
-    margin-top: -80%;
-    background-color: rgb(22, 22, 22);
+    width: 95%;
+    padding: 15px;
   }
 
   .popup_title_report {
     font-size: 18px;
-    margin-left: -5%; /* Center it by removing negative margin */
-    text-align: left;
-    margin-top: 90%;
+    margin: 15px 0;
+  }
+
+  .report_content {
+    gap: 20px;
   }
 
   .summary_text {
     font-size: 12px;
-    padding: 15px 10px;
-    margin-top: -215%; /* Position directly below title */
-    width: 110%; /* Slightly less than full width for padding */
-    margin-left: 2.5%; /* Center it */
-    max-width: none; /* Remove max-width constraint */
-    text-align: left;
+    padding: 15px;
+    max-width: 100%;
   }
 
   .overall_bubble {
-    width: 110px;
-    height: 110px;
-    font-size: 20px;
-    margin-top: -78.5%; /* Position below summary text */
-    margin-left: -65%;
-    margin-bottom: 20px; /* Space before agent bubbles */
+    width: 100%;
+    max-width: 220px;
+    height: 100px;
+    font-size: 18px;
   }
 
   .metric_label {
@@ -267,21 +223,14 @@ to {
   }
 
   .agent_bubbles {
-    width: 60%; /* Adjust width to fit beside overall bubble */
-    grid-template-columns: repeat(2, 1fr); /* Keep 2 columns */
-    margin-left: -140%;
-    margin-top: 140%;
-    position: relative; /* Ensure it stays in flow */
-    justify-content: center; /* Center the grid */
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+    max-width: 100%;
   }
 
   .agent_bubble {
-    width: 80px;
-    height: 60px;
+    width: 105px;
+    height: 50px;
     font-size: 10px;
-    margin-left: 315%;
-    border-radius: 12px;
   }
 
   .agent_rating {
@@ -289,175 +238,199 @@ to {
   }
 
   .agent_name {
-    font-size: 10px;
-    max-width: 50px;
+    font-size: 9px;
   }
 
   .close_button {
     padding: 6px 15px;
     font-size: 12px;
     width: 35%;
-    margin-top: 57%; /* Adjust for new layout */
-    margin-left: 0; /* Center it */
-    display: block; /* Ensure it behaves as a block */
-    margin-right: auto;
-    margin-left: auto;
   }
 }
 
-@media screen and (min-width: 370px) and (max-width: 380px) and (max-height: 768px) {
+/* Small Mobile (401px - 600px) */
+@media screen and (min-width: 401px) and (max-width: 600px) {
   .popup_box {
-    width: 100%;
-    height: 110vh; /* Slightly reduced height for smaller screens */
-    margin-top: -75%; /* Adjusted for better positioning */
-    background-color: rgb(22, 22, 22);
+    width: 95%;
+    padding: 20px;
   }
 
   .popup_title_report {
-    font-size: 20px; /* Slightly smaller font for smaller screen */
-    margin-left: -10%;
-    text-align: left;
-    margin-top: 81%; /* Adjusted for proportionality */
-    margin-bottom: 8%;
+    font-size: 20px;
+    margin: 15px 0;
+  }
+
+  .report_content {
+    gap: 25px;
   }
 
   .summary_text {
-    font-size: 12px; /* Slightly smaller text */
-    padding: 12px 10px;
-    margin-top: -177%; /* Adjusted to fit below title */
-    width: 105%;
-    padding-bottom: 8%;
-    margin-left: 1%;
-    max-width: none;
-    text-align: left;
+    font-size: 14px;
+    padding: 15px;
+    max-width: 100%;
   }
 
   .overall_bubble {
-    width: 120px; /* Slightly smaller bubble */
-    height: 120px;
-    font-size: 18px; /* Adjusted font size */
-    margin-top: -63%; /* Positioned below summary */
-    margin-left: -65%;
-    margin-bottom: 15px;
-  }
-
-  .metric_label {
-    font-size: 9px; /* Adjusted for smaller screen */
-  }
-
-  .agent_bubbles {
-    width: 65%; /* Slightly wider to fit content */
-    grid-template-columns: repeat(2, 1fr);
-    margin-left: -130%;
-    margin-top: 110%; /* Adjusted positioning */
-    position: relative;
-    justify-content: center;
-    gap: 8px; /* Reduced gap */
-  }
-
-  .agent_bubble {
-    width: 95px;
-    height: 55px;
-    font-size: 9px;
-    margin-left: 280%; /* Adjusted for alignment */
-    border-radius: 10px;
-  }
-
-  .agent_rating {
-    font-size: 13px; /* Slightly smaller */
-  }
-
-  .agent_name {
-    font-size: 9px;
-    max-width: 45px; /* Adjusted for smaller bubble */
-  }
-
-  .close_button {
-    padding: 5px 12px;
-    font-size: 11px;
-    width: 40%;
-    margin-top: 49%; /* Adjusted for layout */
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-  }
-}
-
-@media screen and (min-width: 420px) and (max-width: 450px) and (max-height: 768px) {
-  .popup_box {
     width: 100%;
-    height: 115vh; /* Slightly taller for larger screens */
-    margin-top: -85%; /* Adjusted for better fit */
-    background-color: rgb(22, 22, 22);
-  }
-
-  .popup_title_report {
-    font-size: 20px; /* Larger font for bigger screen */
-    margin-left: 0; /* Centered */
-    text-align: left;
-    margin-left: -25%;
-    margin-top: 88%; /* Adjusted positioning */
-  }
-
-  .summary_text {
-    font-size: 12.5px; /* Larger text */
-    padding: 18px 12px;
-    margin-top: -150%; /* Adjusted to fit below title */
-    width: 106%; /* Slightly wider */
-    margin-left: 1%;
-    margin-right: 1%;
-    margin-bottom: 2%;
-    max-width: none;
-    text-align: left;
-  }
-
-  .overall_bubble {
-    width: 140px; /* Larger bubble */
-    height: 140px;
-    font-size: 22px; /* Larger font */
-    margin-top: -61%; /* Positioned below summary */
-    margin-left: -65%;
-    margin-bottom: 25px;
+    max-width: 330px;
+    height: 150px;
+    font-size: 20px;
   }
 
   .metric_label {
-    font-size: 11px; /* Slightly larger */
-  }
-
-  .agent_bubbles {
-    width: 60%; /* Adjusted width */
-    grid-template-columns: repeat(2, 1fr);
-    margin-left: -140%;
-    margin-top: 85%; /* Adjusted positioning */
-    position: relative;
-    justify-content: center;
-    gap: 12px; /* Slightly larger gap */
-  }
-
-  .agent_bubble {
-    width: 105px; /* Larger bubble */
-    height: 65px;
     font-size: 12px;
-    margin-left: 320%;
-    border-radius: 14px;
+  }
+
+  .agent_bubbles {
+    grid-template-columns: repeat(auto-fit, minmax(157px, 1fr));
+    max-width: 100%;
+  }
+
+  .agent_bubble {
+    width: 157px;
+    height: 75px;
+    font-size: 12px;
   }
 
   .agent_rating {
-    font-size: 15px; /* Larger rating */
+    font-size: 16px;
   }
 
   .agent_name {
-    font-size: 11px;
-    max-width: 60px; /* Adjusted for larger bubble */
+    font-size: 10px;
   }
 
   .close_button {
     padding: 7px 18px;
     font-size: 13px;
-    width: 35%;
-    margin-top: 41.5%; /* Adjusted for layout */
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
+    width: 30%;
+  }
+}
+
+/* Tablet (601px - 900px) */
+@media screen and (min-width: 601px) and (max-width: 900px) {
+  .popup_box {
+    width: 90%;
+    max-width: 700px;
+    padding: 20px;
+  }
+
+  .popup_title_report {
+    font-size: 22px;
+    margin: 20px 0;
+  }
+
+  .report_content {
+    gap: 30px;
+  }
+
+  .summary_text {
+    font-size: 16px;
+    padding: 20px;
+    max-width: 75%;
+  }
+
+  .overall_bubble {
+    width: 440px;
+    height: 200px;
+    font-size: 24px;
+  }
+
+  .metric_label {
+    font-size: 14px;
+  }
+
+  .agent_bubbles {
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    max-width: 100%;
+  }
+
+  .agent_bubble {
+    width: 210px;
+    height: 100px;
+    font-size: 14px;
+  }
+
+  .agent_rating {
+    font-size: 18px;
+  }
+
+  .agent_name {
+    font-size: 12px;
+  }
+
+  .close_button {
+    padding: 8px 20px;
+    font-size: 14px;
+    width: 20%;
+  }
+}
+
+/* Desktop (901px and up) */
+@media screen and (min-width: 901px) {
+  .popup_box {
+    width: 90%;
+    max-width: 1200px;
+    padding: 20px;
+  }
+
+  .popup_title_report {
+    font-size: 24px;
+    margin: 20px 0;
+  }
+
+  .report_content {
+    display: grid;
+    grid-template-columns: 1fr 440px; /* Left column for summary, right fixed for overall + agents */
+    grid-template-rows: auto auto; /* Two rows: top for summary + overall, bottom for agents */
+    gap: 20px;
+    align-items: start;
+  }
+
+  .summary_text {
+    font-size: 16px;
+    padding: 20px;
+    max-width: 100%; /* Full width of its grid column */
+    grid-column: 1 / 2; /* Left column */
+    grid-row: 1 / 2; /* Top row */
+  }
+
+  .overall_bubble {
+    width: 440px;
+    height: 200px;
+    font-size: 24px;
+    grid-column: 2 / 3; /* Right column */
+    grid-row: 1 / 2; /* Top row */
+  }
+
+  .agent_bubbles {
+    grid-template-columns: repeat(2, 1fr); /* 2x2 grid for 4 bubbles */
+    max-width: 440px; /* Match overall_bubble width */
+    grid-column: 2 / 3; /* Right column */
+    grid-row: 2 / 3; /* Bottom row */
+  }
+
+  .agent_bubble {
+    width: 210px;
+    height: 100px;
+    font-size: 14px;
+  }
+
+  .agent_rating {
+    font-size: 18px;
+  }
+
+  .agent_name {
+    font-size: 12px;
+  }
+
+  .close_button {
+    padding: 8px 20px;
+    font-size: 14px;
+    width: 16%;
+    grid-column: 1 / 3; /* Span both columns */
+    grid-row: 3 / 4; /* New row below agents */
+    justify-self: center; /* Center horizontally */
+    margin-top: 20px;
   }
 }
