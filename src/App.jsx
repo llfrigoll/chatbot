@@ -122,7 +122,7 @@ const Chatbot = () => {
 
     const text = textElement.textContent || "ROTATING CIRCLE TEXT";
     const characters = text.split("");
-    const radius = 30; // Smaller fixed radius to reduce space between characters
+    const radius = 30;
     const angleIncrement = 360 / characters.length;
 
     textElement.innerHTML = "";
@@ -135,11 +135,10 @@ const Chatbot = () => {
       textElement.appendChild(span);
     });
   }, []);
-  
-  const sendToChatN8N = async (data) => {
 
+  const sendToChatN8N = async (data) => {
     const response = await fetch(
-      "https://liamalbrecht.app.n8n.cloud/webhook/15695c64-0d39-4362-82be-7c9e73f1de4f", // Replace with your actual chat webhook URL
+      "https://liamalbrecht.app.n8n.cloud/webhook/15695c64-0d39-4362-82be-7c9e73f1de4f",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -163,21 +162,20 @@ const Chatbot = () => {
 
   const handleSend = async () => {
     if (!userInput.trim()) return;
-  
+
     setMessages((prev) => [...prev, { text: userInput, sender: "user" }]);
     setUserInput("");
     setExampleAnswers([]);
     setIsTyping(true);
-  
+
     const currentFixedQuestion = fixedMessages.length > 0 ? fixedMessages[fixedMessages.length - 1].text : "";
     const lastBotMessage = messages
       .filter((msg) => msg.sender === "bot")
       .slice(-1)[0]?.text || "";
-  
-    // Email validation before sending to n8n when questionIndex is 1
-    let emailInput = ""
+
+    let emailInput = "";
     if (questionIndex === 1) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(userInput)) {
         setMessages((prev) => [
           ...prev,
@@ -185,20 +183,19 @@ const Chatbot = () => {
         ]);
         setIsTyping(false);
         inputRef.current.focus();
-        return; // Stop here; don’t proceed to n8n
+        return;
       }
       setEmail(userInput);
-      emailInput = userInput
+      emailInput = userInput;
     }
 
-    let emailToSend = ""
-    if(!email) {
-      emailToSend = emailInput
-    }else {
-      emailToSend = email
+    let emailToSend = "";
+    if (!email) {
+      emailToSend = emailInput;
+    } else {
+      emailToSend = email;
     }
-  
-    // Proceed to n8n if email is valid or not question 2
+
     const chatData = await sendToChatN8N({
       userInput,
       questionIndex,
@@ -209,34 +206,33 @@ const Chatbot = () => {
       lastBotMessage,
       initialised,
     });
-  
+
     setIsTyping(false);
-  
+
     if (chatData.text) {
       setMessages((prev) => [...prev, { text: chatData.text, sender: "bot" }]);
-  
+
       if (!chatData.isDeviatedAnswer) {
         let nextIndex;
-  
+
         if (questionIndex === null) {
           nextIndex = 1;
         } else {
           nextIndex = questionIndex + 1;
         }
-  
-        // Update survey state
+
         setAnswers((prev) => ({ ...prev, [questionIndex]: userInput }));
         setQuestionIndex(nextIndex);
         setLastSurveyQuestionIndex(nextIndex);
         setInitialised(true);
-  
+
         if (chatData.example_answers) setExampleAnswers(chatData.example_answers);
         else setExampleAnswers([]);
-  
+
         if (chatData.fixedQuestion) {
           setFixedMessages((prev) => [...prev, { text: chatData.fixedQuestion }]);
         }
-  
+
         if (chatData.text.includes("Fantastic, that should be it!")) {
           setMessages((prev) => [
             ...prev,
@@ -249,7 +245,7 @@ const Chatbot = () => {
         }
       }
     }
-  
+
     inputRef.current.focus();
   };
 
@@ -259,15 +255,11 @@ const Chatbot = () => {
     setExampleAnswers([]);
     setIsTyping(true);
 
-    // Get the current fixed question from fixedMessages (last element)
     const currentFixedQuestion = fixedMessages.length > 0 ? fixedMessages[fixedMessages.length - 1].text : "";
-    
-    // Get the most recent bot message from messages
     const lastBotMessage = messages
       .filter((msg) => msg.sender === "bot")
       .slice(-1)[0]?.text || "";
 
-    // Send example answer to the chat workflow (deviation handler)
     const chatData = await sendToChatN8N({
       userInput: answer,
       questionIndex,
@@ -284,7 +276,6 @@ const Chatbot = () => {
     if (chatData.text) {
       setMessages((prev) => [...prev, { text: chatData.text, sender: "bot" }]);
 
-      // Handle survey logic only if isDeviatedAnswer is false
       if (!chatData.isDeviatedAnswer) {
         const nextIndex = chatData.questionIndex || questionIndex + 1;
 
@@ -522,34 +513,36 @@ const Chatbot = () => {
             </svg>
           </button>
         </div>
-        <div className="restart_button_container">
-          <button className="restart_button" onClick={restartChat}>
-            RESTART<img src="/Group 2.png" alt="Arrow" className="arrow-icon2" />
-          </button>
-          {messages.some((msg) =>
-            msg.text.includes(
-              "In order to generate your report, please review your answers first by clicking 'Review Answers' below."
-            )
-          ) && (
-            <ReviewAnswersPopup
-              messages={messages}
-              answers={answers}
-              email={email}
-              fixedMessages={fixedMessages}
-              updateAnswers={setAnswers}
-              updateEmail={setEmail}
-              onFirstClose={handleFirstClose}
-            />
-          )}
+        <div className="button-group">
+          <div className="button-row">
+            <button className="restart_button" onClick={restartChat}>
+              RESTART<img src="/Group 2.png" alt="Arrow" className="arrow-icon2" />
+            </button>
+            {messages.some((msg) =>
+              msg.text.includes(
+                "In order to generate your report, please review your answers first by clicking 'Review Answers' below."
+              )
+            ) && (
+              <ReviewAnswersPopup
+                messages={messages}
+                answers={answers}
+                email={email}
+                fixedMessages={fixedMessages}
+                updateAnswers={setAnswers}
+                updateEmail={setEmail}
+                onFirstClose={handleFirstClose}
+              />
+            )}
+          </div>
           {reportData && (
             <button className="view_report_button" onClick={handleViewReport}>
               VIEW REPORT<img src="/Group 1.png" alt="Arrow" className="arrow-icon" />
             </button>
           )}
-          {showReportPopup && reportData && (
-            <ReportPopup reportData={reportData} onClose={() => setShowReportPopup(false)} />
-          )}
         </div>
+        {showReportPopup && reportData && (
+          <ReportPopup reportData={reportData} onClose={() => setShowReportPopup(false)} />
+        )}
       </div>
     </div>
   );
