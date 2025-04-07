@@ -829,7 +829,7 @@
 
   .chat-container p {
     font-size: clamp(18px, 3vw, 22px);
-    top: 7%;
+    top: 7.8%;
     left: 2%;
   }
 
@@ -985,14 +985,14 @@
 @media screen and (min-width: 1441px) {
   .chat-container h1 {
     font-size: 50px;
-    top: 0;
+    top: -1.5%;
     left: 1.5%;
     margin: 20px 0 0 0;
   }
 
   .chat-container p {
     font-size: 24px;
-    top: 8%;
+    top: 9%;
     left: 1.6%;
   }
 
@@ -1009,5 +1009,9 @@
   .button-row {
     flex-direction: row;
     gap: 10px;
+  }
+
+  .background-grid {
+    margin-top: 7%;
   }
 }

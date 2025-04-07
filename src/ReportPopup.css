@@ -1,13 +1,10 @@
-/* Base styles for popup */
+/* Popup container */
 .popup_container {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(10px);
   opacity: 0;
@@ -15,21 +12,32 @@
   z-index: 1000;
 }
 
+/* Animation for exit */
+.popup_container.fadeOut {
+  animation: fadeOut 0.3s ease-in forwards;
+}
+
+/* Popup box */
 .popup_box {
   background-color: rgb(22, 22, 22);
   border-radius: 20px;
-  padding: 20px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  width: 100vw;
-  height: 100vh;
+  width: 100vw; /* Full viewport width by default */
+  height: 100vh; /* Full viewport height by default */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  padding: 20px;
   backdrop-filter: blur(100px);
   opacity: 0;
   transform: scale(0.9);
   animation: popupIn 0.3s ease-out forwards;
   overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Animation for exit */
+.popup_box.popupOut {
+  animation: popupOut 0.3s ease-in forwards;
 }
 
 .popup_title_report {
@@ -38,7 +46,7 @@
   font-weight: bold;
   text-align: left;
   width: 100%;
-  margin: 20px 0 20px 0;
+  margin: 0 0 20px 1.5%;
 }
 
 .report_content {
@@ -53,7 +61,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   width: 100%;
-  max-width: 600px;
   gap: 20px;
   justify-content: center;
 }
@@ -61,7 +68,7 @@
 .agent_bubble {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 20px;
-  width: 210px;
+  width: 120px;
   height: 100px;
   display: flex;
   flex-direction: column;
@@ -100,7 +107,8 @@
 .overall_bubble {
   background: rgb(230, 230, 230);
   border-radius: 20px;
-  width: 440px;
+  max-width: 60%;
+  width: 300px;
   height: 200px;
   display: flex;
   flex-direction: column;
@@ -136,7 +144,7 @@
   background-color: #1a1a1a;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  width: 100%;
+  width: 60%;
 }
 
 .close_button {
@@ -146,11 +154,13 @@
   border-radius: 50px;
   padding: 8px 20px;
   font-size: 14px;
-  width: 16%;
+  width: 10%;
   min-width: 120px;
   cursor: pointer;
   transition: background-color 0.3s;
   font-weight: bold;
+  margin-top: 20px;
+  margin-left: 1.5%;
 }
 
 .close_button:hover {
@@ -169,14 +179,6 @@
 }
 
 /* Exit animations */
-.popup_container.fadeOut {
-  animation: fadeOut 0.3s ease-in forwards;
-}
-
-.popup_box.popupOut {
-  animation: popupOut 0.3s ease-in forwards;
-}
-
 @keyframes fadeOut {
   from { opacity: 1; }
   to { opacity: 0; }
@@ -187,18 +189,18 @@
   to { opacity: 0; transform: scale(0.9); }
 }
 
-/* Responsive adjustments */
-
-/* Extra Small Mobile (max-width: 400px) */
-@media screen and (max-width: 400px) {
+/* Small Mobile (max-width: 576px) */
+@media screen and (max-width: 576px) {
   .popup_box {
-    width: 95%;
-    padding: 15px;
+    width: 95vw;
+    padding: 10px 5px;
+    height: 75vh;
+    overflow-x: hidden;
   }
 
   .popup_title_report {
-    font-size: 18px;
-    margin: 15px 0;
+    font-size: clamp(18px, 5vw, 20px);
+    margin: 0 0 15px 1.5%;
   }
 
   .report_content {
@@ -206,58 +208,67 @@
   }
 
   .summary_text {
-    font-size: 12px;
+    font-size: clamp(12px, 3vw, 14px);
     padding: 15px;
-    max-width: 100%;
+    width: 100%; /* Full width on top */
+    order: 1; /* Ensure it’s first */
   }
 
   .overall_bubble {
     width: 100%;
-    max-width: 220px;
-    height: 100px;
-    font-size: 18px;
+    max-width: 99%;
+    height: 80px;
+    font-size: clamp(16px, 4vw, 18px);
+    order: 2; /* Below summary_text */
   }
 
   .metric_label {
-    font-size: 10px;
+    font-size: clamp(10px, 2.5vw, 12px);
   }
 
   .agent_bubbles {
-    grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
-    max-width: 100%;
+    grid-template-columns: repeat(2, 1fr); /* 2x2 grid */
+    width: 100%;
+    gap: 10px;
+    order: 3; /* Below overall_bubble */
   }
 
   .agent_bubble {
-    width: 105px;
-    height: 50px;
-    font-size: 10px;
+    width: 100%; /* Full width of grid cell */
+    height: 60px;
+    font-size: clamp(10px, 2.5vw, 12px);
   }
 
   .agent_rating {
-    font-size: 14px;
+    font-size: clamp(14px, 3vw, 16px);
   }
 
   .agent_name {
-    font-size: 9px;
+    font-size: clamp(8px, 2vw, 10px);
   }
 
   .close_button {
     padding: 6px 15px;
-    font-size: 12px;
-    width: 35%;
+    font-size: clamp(10px, 3vw, 12px);
+    width: 40%;
+    min-width: 100px;
+    margin-left: 1.5%;
+    order: 4; /* Last item */
   }
 }
 
-/* Small Mobile (401px - 600px) */
-@media screen and (min-width: 401px) and (max-width: 600px) {
+/* Large Mobile (577px - 768px) */
+@media screen and (min-width: 577px) and (max-width: 768px) {
   .popup_box {
-    width: 95%;
-    padding: 20px;
+    width: 90vw;
+    padding: 15px 10px;
+    height: 85vh;
+    overflow-x: hidden;
   }
 
   .popup_title_report {
-    font-size: 20px;
-    margin: 15px 0;
+    font-size: clamp(20px, 4vw, 22px);
+    margin: 0 0 15px 1.5%;
   }
 
   .report_content {
@@ -265,172 +276,217 @@
   }
 
   .summary_text {
-    font-size: 14px;
+    font-size: clamp(14px, 3vw, 16px);
     padding: 15px;
-    max-width: 100%;
+    width: 100%; /* Full width on top */
+    order: 1; /* Ensure it’s first */
   }
 
   .overall_bubble {
     width: 100%;
-    max-width: 330px;
+    max-width: 99.5%;
     height: 150px;
-    font-size: 20px;
+    font-size: clamp(18px, 4vw, 20px);
+    order: 2; /* Below summary_text */
   }
 
   .metric_label {
-    font-size: 12px;
+    font-size: clamp(12px, 2.5vw, 14px);
   }
 
   .agent_bubbles {
-    grid-template-columns: repeat(auto-fit, minmax(157px, 1fr));
-    max-width: 100%;
+    grid-template-columns: repeat(2, 1fr); /* 2x2 grid */
+    width: 100%;
+    gap: 15px;
+    order: 3; /* Below overall_bubble */
   }
 
   .agent_bubble {
-    width: 157px;
-    height: 75px;
-    font-size: 12px;
+    width: 100%; /* Full width of grid cell */
+    height: 80px;
+    font-size: clamp(12px, 2.5vw, 14px);
   }
 
   .agent_rating {
-    font-size: 16px;
+    font-size: clamp(16px, 3vw, 18px);
   }
 
   .agent_name {
-    font-size: 10px;
+    font-size: clamp(10px, 2vw, 12px);
   }
 
   .close_button {
     padding: 7px 18px;
-    font-size: 13px;
+    font-size: clamp(12px, 2.5vw, 14px);
     width: 30%;
+    min-width: 110px;
+    order: 4; /* Last item */
   }
 }
 
-/* Tablet (601px - 900px) */
-@media screen and (min-width: 601px) and (max-width: 900px) {
+/* Tablet (769px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
   .popup_box {
-    width: 90%;
-    max-width: 700px;
-    padding: 20px;
-  }
-
-  .popup_title_report {
-    font-size: 22px;
-    margin: 20px 0;
-  }
-
-  .report_content {
-    gap: 30px;
-  }
-
-  .summary_text {
-    font-size: 16px;
-    padding: 20px;
-    max-width: 75%;
-  }
-
-  .overall_bubble {
-    width: 440px;
-    height: 200px;
-    font-size: 24px;
-  }
-
-  .metric_label {
-    font-size: 14px;
-  }
-
-  .agent_bubbles {
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    max-width: 100%;
-  }
-
-  .agent_bubble {
-    width: 210px;
-    height: 100px;
-    font-size: 14px;
-  }
-
-  .agent_rating {
-    font-size: 18px;
-  }
-
-  .agent_name {
-    font-size: 12px;
-  }
-
-  .close_button {
-    padding: 8px 20px;
-    font-size: 14px;
-    width: 20%;
-  }
-}
-
-/* Desktop (901px and up) */
-@media screen and (min-width: 901px) {
-  .popup_box {
-    width: 90%;
+    width: 100vw;
     max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
+    height: 100vh;
   }
 
   .popup_title_report {
-    font-size: 24px;
-    margin: 20px 0;
+    font-size: clamp(22px, 3vw, 24px);
   }
 
   .report_content {
     display: grid;
-    grid-template-columns: 1fr 440px; /* Left column for summary, right fixed for overall + agents */
-    grid-template-rows: auto auto; /* Two rows: top for summary + overall, bottom for agents */
+    grid-template-columns: 6fr 4fr; /* 60% summary, 40% overall + agents */
+    grid-template-rows: auto auto auto; /* Extra row for stacked agents */
     gap: 20px;
     align-items: start;
   }
 
   .summary_text {
-    font-size: 16px;
-    padding: 20px;
-    max-width: 100%; /* Full width of its grid column */
-    grid-column: 1 / 2; /* Left column */
-    grid-row: 1 / 2; /* Top row */
+    max-width: 100%; /* Full width of its 60% column */
+    grid-column: 1 / 2;
+    grid-row: 1 / 4; /* Span all rows */
+    min-width: 0;
   }
 
   .overall_bubble {
-    width: 440px;
-    height: 200px;
-    font-size: 24px;
-    grid-column: 2 / 3; /* Right column */
-    grid-row: 1 / 2; /* Top row */
+    width: 45%; /* Full width of its 40% column */
+    max-width: 250px;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    margin-left: -60%;
   }
 
   .agent_bubbles {
-    grid-template-columns: repeat(2, 1fr); /* 2x2 grid for 4 bubbles */
-    max-width: 440px; /* Match overall_bubble width */
-    grid-column: 2 / 3; /* Right column */
-    grid-row: 2 / 3; /* Bottom row */
+    display: flex;
+    flex-direction: column; /* Stack vertically */
+    width: 100%;
+    max-width: 120px; /* Match agent_bubble width */
+    margin-left: -60%; /* Align with overall_bubble */
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    gap: 15px; /* Space between stacked bubbles */
   }
 
   .agent_bubble {
-    width: 210px;
-    height: 100px;
-    font-size: 14px;
-  }
-
-  .agent_rating {
-    font-size: 18px;
-  }
-
-  .agent_name {
-    font-size: 12px;
+    width: 170px; /* Consistent width */
+    height: 80px;
+    margin: 0; /* Remove negative margins */
   }
 
   .close_button {
+    grid-column: 1 / 3;
+    grid-row: 4 / 5; /* Move below stacked agents */
+    justify-self: center;
+    margin-top: 1.5%;
+    margin-left: 0; /* Center override */
     padding: 8px 20px;
     font-size: 14px;
-    width: 16%;
-    grid-column: 1 / 3; /* Span both columns */
-    grid-row: 3 / 4; /* New row below agents */
-    justify-self: center; /* Center horizontally */
-    margin-top: 20px;
+    width: 10%;
+    min-width: 120px;
+  }
+}
+
+/* Laptop (1025px - 1440px) */
+@media screen and (min-width: 1025px) and (max-width: 1440px) {
+  .popup_box {
+    width: 100vw;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    height: 100vh;
+  }
+
+  .report_content {
+    display: grid;
+    grid-template-columns: 6fr 4fr; /* 60% summary, 40% overall + agents */
+    grid-template-rows: auto auto;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .summary_text {
+    max-width: 100%; /* Full width of its 60% column */
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    min-width: 0;
+  }
+
+  .overall_bubble {
+    width: 100%; /* Full width of its 40% column */
+    max-width: 250px;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    margin-left: -60%;
+  }
+
+  .agent_bubbles {
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: -38%;
+    margin-top: -10%;
+    max-width: 50px;
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+
+  .close_button {
+    grid-column: 1 / 3;
+    grid-row: 3 / 4;
+    justify-self: center;
+    margin-left: 0; /* Center override */
+  }
+}
+
+/* Desktop (1441px and up) */
+@media screen and (min-width: 1441px) {
+  .popup_box {
+    width: 100vw;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    height: 100vh;
+  }
+
+  .report_content {
+    display: grid;
+    grid-template-columns: 6fr 4fr; /* 60% summary, 40% overall + agents */
+    grid-template-rows: auto auto;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .summary_text {
+    max-width: 100%; /* Full width of its 60% column */
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    min-width: 0;
+  }
+
+  .overall_bubble {
+    width: 100%; /* Full width of its 40% column */
+    max-width: 250px;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    margin-left: -60%;
+  }
+
+  .agent_bubbles {
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: -38%;
+    margin-top: -10%;
+    max-width: 50px;
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+
+  .close_button {
+    grid-column: 1 / 3;
+    grid-row: 3 / 4;
+    justify-self: center;
+    margin-left: 0; /* Center override */
   }
 }
