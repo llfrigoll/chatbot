@@ -138,7 +138,7 @@ const Chatbot = () => {
 
   const sendToChatN8N = async (data) => {
     const response = await fetch(
-      "https://charliebessell.app.n8n.cloud/webhook/235a78ab-a7df-43e6-b5ab-8caf608a4c1d",
+      "https://liamalbrecht.app.n8n.cloud/webhook/15695c64-0d39-4362-82be-7c9e73f1de4f",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -150,7 +150,7 @@ const Chatbot = () => {
 
   const sendSubmitToN8N = async (email) => {
     const response = await fetch(
-      "https://charliebessell.app.n8n.cloud/webhook/25e0bbd0-a49d-4106-b4e3-973ecb98f202",
+      "https://liamalbrecht.app.n8n.cloud/webhook/25e0bbd0-a49d-4106-b4e3-973ecb98f202",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
